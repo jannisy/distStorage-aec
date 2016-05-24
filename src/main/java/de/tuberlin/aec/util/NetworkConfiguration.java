@@ -12,11 +12,6 @@ import java.util.regex.Pattern;
 
 public class NetworkConfiguration {
 	
-
-	/**
-	 * file which contains a list of all nodes
-	 */
-	public static final String NODE_LIST_FILE = "serverlist";
 	
 	/**
 	 * the standard port of a node
@@ -28,19 +23,19 @@ public class NetworkConfiguration {
 	 */
 	private List<InetSocketAddress> nodes;
 	
-	public NetworkConfiguration() {
+	public NetworkConfiguration(String nodeListfile) {
 		this.nodes = new ArrayList<InetSocketAddress>();
-		this.readNodeList();
+		this.readNodeList(nodeListfile);
 	}
 	
 	/**
 	 * reads the node list file	
 	 */
-	private void readNodeList() {
+	private void readNodeList(String nodeListfile) {
 
 		FileInputStream fstream;
 		try {
-			fstream = new FileInputStream(NODE_LIST_FILE);
+			fstream = new FileInputStream(nodeListfile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
