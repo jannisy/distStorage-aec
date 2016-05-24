@@ -1,4 +1,4 @@
-package de.tuberlin.aec;
+package de.tuberlin.aec.util;
 
 import java.io.File;
 import java.io.IOException;

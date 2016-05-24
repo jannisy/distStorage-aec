@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
+import de.tuberlin.aec.util.PathConfiguration;
 
 /**
  * A DistoNode represents one node of the distributed key value store.

@@ -1,12 +1,15 @@
 package de.tuberlin.aec;
 
-import de.tuberlin.aec.util.NetworkConfiguration;
+import de.tub.ise.hermes.Request;
 import de.tuberlin.aec.util.NodeConfiguration;
+import de.tuberlin.aec.util.PathConfiguration;
+import de.tuberlin.aec.util.NetworkConfiguration;
 
 /**
  * Hello world!
  *
  */
+
 public class DistStorage {
     public static void main( String[] args ) {
     	// TODO read ports from arguments or some file
@@ -16,6 +19,14 @@ public class DistStorage {
     	
     	DistoNode node = new DistoNode(nodeConfig, pathConfig, netConfig);
     	node.start();
-    	
+
+        int port = 5000;
+        String sender = "this Node's Name";
+        String target = "the other Node's Name";
+        String targetIP = "192.168.0.57";
+
+        Communicator communicator = new Communicator(port, sender);
+        Request request = new Request("Message", target, sender);
+        communicator.sendMessage(targetIP, port, request);
     }
 }
