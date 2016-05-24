@@ -20,15 +20,18 @@ public class DistStorage {
     	DistoNode node = new DistoNode(nodeConfig, pathConfig, netConfig);
     	node.start();
 
-        int port = new Integer(args[0]);
-        System.out.println("Port set to " + port);
+        int hermesPort = new Integer(args[0]);
+        System.out.println("Port set to " + hermesPort);
+
+        int serverPort = new Integer(args[1]);
+        System.out.println("Port set to " + serverPort);
 
         String sender = "johannes";
         String target = "jannis";
         String targetIP = "192.168.0.57";
 
-        Communicator communicator = new Communicator(port, sender);
+        Communicator communicator = new Communicator(hermesPort, sender);
         Request request = new Request("Cuntfuck", target, sender);
-        communicator.sendMessage(targetIP, port, request);
+        communicator.sendMessage(targetIP, hermesPort, request);
     }
 }
