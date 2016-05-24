@@ -27,4 +27,24 @@ interface LocalStorage {
 	 */
 	public void delete(String key);
 
+	/**
+	 * locks the key value pair with the given key
+	 * @param key the key
+	 */
+	public void lock(String key);
+
+	/**
+	 * unlocks the key value pair with the given key
+	 * @param key the key
+	 */
+	public void unlock(String key);
+
+	/**
+	 * returns true if the key value pair with the given key is locked
+	 * @param key the key
+	 * @return true if the key value pair with the given key is locked
+	 */
+	public boolean isLocked(String key);
+	
+
 }

@@ -28,15 +28,21 @@ public class DistoNode {
 	/**
 	 * the path configuration
 	 */
-	PathConfiguration pathConfig;
+	private PathConfiguration pathConfig;
 	/**
 	 * the network configuration
 	 */
-	NetworkConfiguration networkConfig;
+	private NetworkConfiguration networkConfig;
+	
 	/**
 	 * the node configuration
 	 */
-	NodeConfiguration nodeConfig;
+	private NodeConfiguration nodeConfig;
+	
+	/**
+	 * the disto node api
+	 */
+	private DistoNodeApi api;
 	/**
 	 * creates a new DistoNode with the given configuration
 	 * @param nodeConfig the node config
@@ -49,6 +55,31 @@ public class DistoNode {
 		this.networkConfig = networkConfig;
 		this.nodeConfig = nodeConfig;
 		
+		this.api = new DistoNodeApi();
+		
+	}
+	
+	/**
+	 * starts this node
+	 * @return
+	 */
+	public void start() {
+		startWebserver();
+		startHermes();
+		
+	}
+	
+	private void startWebserver() {
+
+		try {
+			RestServer restServer = new RestServer(this.nodeConfig.getRestPort(), this.api);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private void startHermes() {
+
 		/* Handlers */
 		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler();
 		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler();
@@ -67,21 +98,6 @@ public class DistoNode {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * starts this node
-	 * @return
-	 */
-	public void start() {
-		
-		try {
-			RestServer restServer = new RestServer(this.nodeConfig.getRestPort());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
 }

@@ -11,9 +11,11 @@ import java.util.Map;
 public class MapStorage implements LocalStorage {
 
 	Map<String, String> map;
+	Map<String, Boolean> locked;
 	
 	public MapStorage() {
 		map = new HashMap<String, String>();
+		locked = new HashMap<String, Boolean>();
 		
 	}
 	public String get(String key) {
@@ -27,6 +29,18 @@ public class MapStorage implements LocalStorage {
 
 	public void delete(String key) {
 		map.remove(key);
+		
+	}
+	public void lock(String key) {
+		locked.put(key, true);
+		
+	}
+	public void unlock(String key) {
+		locked.remove(key);
+		
+	}
+	public boolean isLocked(String key) {
+		return this.locked.get(key);
 		
 	}
 

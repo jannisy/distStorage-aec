@@ -11,8 +11,12 @@ import fi.iki.elonen.NanoHTTPD;
 public class RestServer extends NanoHTTPD {
 	
 
-    public RestServer(int port) throws IOException {
+	/** the node api */
+    private DistoNodeApi api;
+    
+	public RestServer(int port, DistoNodeApi api) throws IOException {
         super(port);
+        this.api = api;
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
         System.out.println("\nREST API server running: http://localhost:" + port + "/ \n");
     }
@@ -33,12 +37,19 @@ public class RestServer extends NanoHTTPD {
     
 
     public Response servePut(IHTTPSession session) {
+		String key = "";
+		String value = "";
+		this.api.put(key, value);
         return newFixedLengthResponse("TODO");
     }
     public Response serveDelete(IHTTPSession session) {
+		String key = "";
+		this.api.delete(key);
         return newFixedLengthResponse("TODO");
     }
     public Response serveGet(IHTTPSession session) {
+		String key = "";
+		String value = this.api.get(key);
         return newFixedLengthResponse("TODO");
     }
     public Response serveHelp(IHTTPSession session) {
