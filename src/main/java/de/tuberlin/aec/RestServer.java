@@ -10,10 +10,9 @@ import fi.iki.elonen.NanoHTTPD;
  */
 public class RestServer extends NanoHTTPD {
 	
-	private static final int port = 8080;
 
-    public RestServer() throws IOException {
-        super(RestServer.port);
+    public RestServer(int port) throws IOException {
+        super(port);
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
         System.out.println("\nREST API server running: http://localhost:" + port + "/ \n");
     }
