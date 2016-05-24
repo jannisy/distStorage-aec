@@ -2,6 +2,11 @@ package de.tuberlin.aec;
 
 import java.io.IOException;
 
+import de.tub.ise.hermes.Receiver;
+import de.tub.ise.hermes.RequestHandlerRegistry;
+import de.tuberlin.aec.communication.SyncWriteCommitHandler;
+import de.tuberlin.aec.communication.SyncWriteSuggestionHandler;
+import de.tuberlin.aec.communication.SyncWriteSuggestionResponseHandler;
 import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
@@ -14,6 +19,11 @@ import de.tuberlin.aec.util.PathConfiguration;
  * 
  */
 public class DistoNode {
+	
+
+	public static final String HANDLER_SYNC_WRITE_COMMIT = "SyncWriteCommit";
+	public static final String HANDLER_SYNC_WRITE_SUGGESTION = "SyncWriteSuggestion";
+	public static final String HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE = "SyncWriteSuggestionResp";
 
 	/**
 	 * the path configuration
@@ -38,6 +48,25 @@ public class DistoNode {
 		this.pathConfig = pathConfig;
 		this.networkConfig = networkConfig;
 		this.nodeConfig = nodeConfig;
+		
+		/* Handlers */
+		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler();
+		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler();
+		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler();
+		
+		RequestHandlerRegistry reg = RequestHandlerRegistry.getInstance();
+		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_COMMIT, syncWriteCommitHandler);
+		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION, syncWriteSuggestionHandler);
+		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE, syncWriteSuggestionResponseHandler);
+		
+		try {
+			Receiver receiver = new Receiver(nodeConfig.getPort());
+			receiver.start();
+			System.out.println("Receiver started.");
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	/**
