@@ -28,6 +28,11 @@
       <artifactId>hermes</artifactId>
       <version>1ff57ed</version>
     </dependency>
+    <dependency>
+      <groupId>org.nanohttpd</groupId>
+      <artifactId>nanohttpd</artifactId>
+      <version>2.2.0</version>
+</dependency>
   </dependencies>
 
   <build>
