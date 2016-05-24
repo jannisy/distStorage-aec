@@ -12,26 +12,35 @@ import de.tuberlin.aec.util.NetworkConfiguration;
 
 public class DistStorage {
     public static void main(String[] args) {
-        // TODO read ports from arguments or some file
-    	NodeConfiguration nodeConfig = new NodeConfiguration(5000, 8080);
-    	PathConfiguration pathConfig = new PathConfiguration("config-sample.xml");
-    	NetworkConfiguration  netConfig = new NetworkConfiguration("serverlist");
     	
-    	DistoNode node = new DistoNode(nodeConfig, pathConfig, netConfig);
-    	node.start();
+    	args = addStandardValuesToArguments(args);
 
         int hermesPort = new Integer(args[0]);
         System.out.println("Port set to " + hermesPort);
 
         int serverPort = new Integer(args[1]);
-        System.out.println("Port set to " + serverPort);
-
-        String sender = "johannes";
-        String target = "jannis";
-        String targetIP = "192.168.0.57";
-
-        Communicator communicator = new Communicator(hermesPort, sender);
-        Request request = new Request("Cuntfuck", target, sender);
-        communicator.sendMessage(targetIP, hermesPort, request);
+        System.out.println("Server Port set to " + serverPort);
+        
+    	NodeConfiguration nodeConfig = new NodeConfiguration(hermesPort, serverPort);
+    	PathConfiguration pathConfig = new PathConfiguration("config-sample.xml");
+    	NetworkConfiguration  netConfig = new NetworkConfiguration("serverlist");
+    	
+    	DistoNode node = new DistoNode(nodeConfig, pathConfig, netConfig);
+    	node.start();
+    	
     }
+
+	private static String[] addStandardValuesToArguments(String[] args) {
+    	if(args.length == 0) {
+    		args = new String[2];
+    		args[0] = "5000";
+    		args[1] = "8080";
+    	} else if(args.length == 1) {
+    		String temp = args[0];
+    		args = new String[2];
+    		args[0] = temp;
+    		args[1] = "8080";
+    	}
+    	return args;
+	}
 }

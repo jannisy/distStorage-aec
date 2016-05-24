@@ -34,25 +34,44 @@ public class RestServer extends NanoHTTPD {
         	return serveHelp(session);
         }
     }
-    
 
-    public Response servePut(IHTTPSession session) {
-		String key = "";
-		String value = "";
+
+    private Response servePut(IHTTPSession session) {
+    	String uri = session.getUri();
+    	String[] uriParts = uri.split("/");
+    	if(uriParts.length < 4) {
+    		return this.malformedRequest(session);
+    	}
+    	
+		String key = uriParts[2];
+		String value = uriParts[3];
+		// TODO status
 		this.api.put(key, value);
-        return newFixedLengthResponse("TODO");
+
+		String json = "{status: 'OK'}";
+        return newFixedLengthResponse(json);
     }
-    public Response serveDelete(IHTTPSession session) {
-		String key = "";
+    private Response serveDelete(IHTTPSession session) {
+    	String uri = session.getUri();
+    	String[] uriParts = uri.split("/");
+    	if(uriParts.length < 3) {
+    		return this.malformedRequest(session);
+    	}
+		String key = uriParts[2];
 		this.api.delete(key);
         return newFixedLengthResponse("TODO");
     }
-    public Response serveGet(IHTTPSession session) {
-		String key = "";
+    private Response serveGet(IHTTPSession session) {
+    	String uri = session.getUri();
+    	String[] uriParts = uri.split("/");
+    	if(uriParts.length < 3) {
+    		return this.malformedRequest(session);
+    	}
+		String key = uriParts[2];
 		String value = this.api.get(key);
         return newFixedLengthResponse("TODO");
     }
-    public Response serveHelp(IHTTPSession session) {
+    private Response serveHelp(IHTTPSession session) {
         String msg = "<html><body><h1>Key-Value Store: REST API</h1>\n";
         msg += "Available functions:";
         msg += "<ul>";
@@ -69,5 +88,10 @@ public class RestServer extends NanoHTTPD {
             msg += "<p>Hello, " + parms.get("username") + "!</p>";
         }
         */
+    }
+    
+    private Response malformedRequest(IHTTPSession session) {
+        String msg = "<html><body><h1>Malformed Request</h1>\n";
+        return newFixedLengthResponse(msg + "</body></html>\n");
     }
 }
