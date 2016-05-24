@@ -1,5 +1,6 @@
 package de.tuberlin.aec;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import de.tub.ise.hermes.Request;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
@@ -11,8 +12,8 @@ import de.tuberlin.aec.util.NetworkConfiguration;
  */
 
 public class DistStorage {
-    public static void main( String[] args ) {
-    	// TODO read ports from arguments or some file
+    public static void main(String[] args) {
+        // TODO read ports from arguments or some file
     	NodeConfiguration nodeConfig = new NodeConfiguration(5000, 8080);
     	PathConfiguration pathConfig = new PathConfiguration("config-sample.xml");
     	NetworkConfiguration  netConfig = new NetworkConfiguration("serverlist");
@@ -20,13 +21,15 @@ public class DistStorage {
     	DistoNode node = new DistoNode(nodeConfig, pathConfig, netConfig);
     	node.start();
 
-        int port = 5000;
-        String sender = "this Node's Name";
-        String target = "the other Node's Name";
+        int port = new Integer(args[0]);
+        System.out.println("Port set to " + port);
+
+        String sender = "johannes";
+        String target = "jannis";
         String targetIP = "192.168.0.57";
 
         Communicator communicator = new Communicator(port, sender);
-        Request request = new Request("Message", target, sender);
+        Request request = new Request("Cuntfuck", target, sender);
         communicator.sendMessage(targetIP, port, request);
     }
 }
