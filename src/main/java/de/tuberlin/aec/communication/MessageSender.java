@@ -9,14 +9,20 @@ import de.tuberlin.aec.message.SyncWriteSuggestionMessage;
  * Created by joh-mue on 24/05/16.
  */
 public class MessageSender {
+	
+	private String sender;
+
+	public MessageSender(String sender) {
+		this.sender = sender;
+	}
     private void sendMessage(String host, int port, Request request) {
         Sender sender = new Sender(host, port);
         sender.sendMessage(request, 2000);
         System.out.println("Message sent.");
     }
 
-    public void sendSyncWriteCommitMessage(String host, int port) {
-        SyncWriteCommitMessage msg = new SyncWriteCommitMessage();
+    public void sendSyncWriteCommitMessage(String host, int port, String key) {
+        SyncWriteCommitMessage msg = new SyncWriteCommitMessage(key, sender);
         sendMessage(host, port, msg);
     }
 
