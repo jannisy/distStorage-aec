@@ -62,8 +62,8 @@ public class DistoNode {
 		this.networkConfig = networkConfig;
 		this.nodeConfig = nodeConfig;
 		
-		this.localStorage = new MapStorage();
-		this.api = new DistoNodeApi();
+		localStorage = new MapStorage();
+		api = new DistoNodeApi(localStorage);
 		
 	}
 	
