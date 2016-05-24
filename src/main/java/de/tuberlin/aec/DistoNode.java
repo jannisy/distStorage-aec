@@ -7,6 +7,8 @@ import de.tub.ise.hermes.RequestHandlerRegistry;
 import de.tuberlin.aec.communication.SyncWriteCommitHandler;
 import de.tuberlin.aec.communication.SyncWriteSuggestionHandler;
 import de.tuberlin.aec.communication.SyncWriteSuggestionResponseHandler;
+import de.tuberlin.aec.storage.MapStorage;
+import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
@@ -43,6 +45,11 @@ public class DistoNode {
 	 * the disto node api
 	 */
 	private DistoNodeApi api;
+	/** 
+	 * the local storage 
+	 */
+	private LocalStorage localStorage;
+	
 	/**
 	 * creates a new DistoNode with the given configuration
 	 * @param nodeConfig the node config
@@ -55,6 +62,7 @@ public class DistoNode {
 		this.networkConfig = networkConfig;
 		this.nodeConfig = nodeConfig;
 		
+		this.localStorage = new MapStorage();
 		this.api = new DistoNodeApi();
 		
 	}
@@ -81,9 +89,9 @@ public class DistoNode {
 	private void startHermes() {
 
 		/* Handlers */
-		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler();
-		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler();
-		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler();
+		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler(localStorage);
+		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler(localStorage);
+		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler(localStorage);
 		
 		RequestHandlerRegistry reg = RequestHandlerRegistry.getInstance();
 		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_COMMIT, syncWriteCommitHandler);

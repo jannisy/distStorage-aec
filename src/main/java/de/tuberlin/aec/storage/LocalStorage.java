@@ -5,7 +5,7 @@ package de.tuberlin.aec.storage;
  * of the key value store.
  *
  */
-interface LocalStorage {
+public interface LocalStorage {
 
 	/**
 	 * returns the value with the given key
