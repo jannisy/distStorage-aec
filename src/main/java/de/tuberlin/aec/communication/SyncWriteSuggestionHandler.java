@@ -17,6 +17,8 @@ public class SyncWriteSuggestionHandler implements IRequestHandler {
 	public Response handleRequest(Request request) {
 		// TODO
 		System.out.println("Received SyncWriteSuggestion Message.");
+		// TODO cast request to SyncWriteSuggestionMessage,
+		// 	 	as in SyncWriteCommitHandler
 		Response response = new Response("", true, request, "");
 		return response;
 	}
