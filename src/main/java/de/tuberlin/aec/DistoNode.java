@@ -1,6 +1,7 @@
 package de.tuberlin.aec;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.tub.ise.hermes.Receiver;
 import de.tub.ise.hermes.RequestHandlerRegistry;
@@ -63,9 +64,9 @@ public class DistoNode {
 		this.networkConfig = networkConfig;
 		this.nodeConfig = nodeConfig;
 		
-		MessageSender msgSender = new MessageSender("testsender");
+		MessageSender msgSender = new MessageSender(nodeConfig.getHostAndPort());
 		localStorage = new MapStorage();
-		api = new DistoNodeApi(localStorage, msgSender);
+		api = new DistoNodeApi(localStorage, msgSender, nodeConfig, pathConfig);
 		
 	}
 	

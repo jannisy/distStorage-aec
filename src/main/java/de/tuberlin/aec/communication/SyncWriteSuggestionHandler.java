@@ -14,15 +14,16 @@ public class SyncWriteSuggestionHandler implements IRequestHandler {
 	}
 
 	@Override
-	public Response handleRequest(Request arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response handleRequest(Request request) {
+		// TODO
+		System.out.println("Received SyncWriteSuggestion Message.");
+		Response response = new Response("", true, request, "");
+		return response;
 	}
 
 	@Override
 	public boolean requiresResponse() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

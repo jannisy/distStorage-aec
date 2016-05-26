@@ -28,6 +28,20 @@ public class NetworkConfiguration {
 		this.readNodeList(nodeListfile);
 	}
 	
+	public static InetSocketAddress createAddressFromString(String addressString) {
+
+		InetSocketAddress address;
+		if(addressString.contains(":")) {
+			// host:port
+			String[] addressParts = addressString.split(":");
+			address = new InetSocketAddress(addressParts[0], Integer.parseInt(addressParts[1]));
+		} else {
+			// host
+			address = new InetSocketAddress(addressString, NetworkConfiguration.STANDARD_PORT);
+		}
+		return address;
+	}
+	
 	/**
 	 * reads the node list file	
 	 */
@@ -45,15 +59,7 @@ public class NetworkConfiguration {
 		String strLine;
 		try {
 			while ((strLine = br.readLine()) != null)   {
-				InetSocketAddress address;
-				if(strLine.contains(":")) {
-					// host:port
-					String[] addressParts = strLine.split(":");
-					address = new InetSocketAddress(addressParts[0], Integer.parseInt(addressParts[1]));
-				} else {
-					// host
-					address = new InetSocketAddress(strLine, NetworkConfiguration.STANDARD_PORT);
-				}
+				InetSocketAddress address = NetworkConfiguration.createAddressFromString(strLine);
 				this.nodes.add(address);
 			}
 			br.close();

@@ -13,4 +13,10 @@
 		<link src="nodeC" type="async" target="nodeA"/>
 		<link src="nodeC" type="async" target="nodeB"/>
 	</path>
+	<path start="localhost:5000">
+		<link src="localhost:5000" type="sync" target="localhost:5001"/>
+	</path>
+	<path start="localhost:5001">
+		<link src="localhost:5001" type="sync" target="localhost:5000"/>
+	</path>
 </replicationpaths>

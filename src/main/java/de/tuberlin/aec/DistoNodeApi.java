@@ -1,7 +1,13 @@
 package de.tuberlin.aec;
 
+import java.net.InetSocketAddress;
+import java.util.List;
+
 import de.tuberlin.aec.communication.MessageSender;
 import de.tuberlin.aec.storage.LocalStorage;
+import de.tuberlin.aec.util.NetworkConfiguration;
+import de.tuberlin.aec.util.NodeConfiguration;
+import de.tuberlin.aec.util.PathConfiguration;
 
 /**
  * This class receives requests for a disto node.
@@ -13,14 +19,23 @@ public class DistoNodeApi {
 
 	private LocalStorage localStorage;
 	private MessageSender msgSender;
+	private NodeConfiguration nodeConfig;
+	private PathConfiguration pathConfig;
 
-	public DistoNodeApi(LocalStorage localStorage, MessageSender msgSender) {
+	public DistoNodeApi(LocalStorage localStorage, MessageSender msgSender, NodeConfiguration nodeConfig, PathConfiguration pathConfig) {
 		this.localStorage = localStorage;
 		this.msgSender = msgSender;
+		this.nodeConfig = nodeConfig;
+		this.pathConfig = pathConfig;
 		
 	}
 
 	public void put(String key, String value) {
+		List<String> neighbours = pathConfig.getNodeNeighbours(nodeConfig.getHostAndPort(), nodeConfig.getHostAndPort());
+		for(String neighbour : neighbours) {
+			InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
+			msgSender.sendSyncWriteSuggestion(address.getHostName(), address.getPort(), key, value);
+		}
 	}
 	
 	public String get(String key) {

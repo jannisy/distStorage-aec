@@ -9,10 +9,23 @@ public class NodeConfiguration {
 	
 	int port;
 	int restPort;
+	private String host;
 
-	public NodeConfiguration(int port, int restPort) {
+	public NodeConfiguration(String host, int port, int restPort) {
+		this.host = host;
 		this.port = port;
 		this.restPort = restPort;
+	}
+	public String getHostAndPort() {
+		return this.getHost() + ":" + this.getPort();
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	public int getPort() {
