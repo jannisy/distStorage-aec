@@ -15,23 +15,20 @@ public class SyncWriteCommitHandler implements IRequestHandler {
 	}
 	@Override
 	public Response handleRequest(Request request) {
-		if(request instanceof SyncWriteCommitMessage) {
-			SyncWriteCommitMessage msg = (SyncWriteCommitMessage) request;
-			String keyToCommit = msg.getKey();
-			assert(localStorage.isLocked(keyToCommit));
-			localStorage.unlock(keyToCommit);
-			
-			// TODO stop timeout mechanism for this key? 
-		} else {
-			// TODO error
-		}
-		return null;
+		SyncWriteCommitMessage msg = SyncWriteCommitMessage.createFromRequest(request);
+		
+		System.out.println("Received SyncWriteCommit Message with key=" + msg.getKey());
+		String keyToCommit = msg.getKey();
+		assert(localStorage.isLocked(keyToCommit));
+		localStorage.unlock(keyToCommit);
+		
+		Response response = new Response("", true, request, "");
+		return response;
 	}
 
 	@Override
 	public boolean requiresResponse() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

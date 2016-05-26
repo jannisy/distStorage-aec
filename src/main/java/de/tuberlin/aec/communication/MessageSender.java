@@ -23,6 +23,7 @@ public class MessageSender {
 
     public void sendSyncWriteCommitMessage(String host, int port, String key) {
         SyncWriteCommitMessage msg = new SyncWriteCommitMessage(key, sender);
+        System.out.println("Send SyncWriteCommitMsg... host=" + host + ":" + port + ", key=" + key);
         sendMessage(host, port, msg);
     }
 

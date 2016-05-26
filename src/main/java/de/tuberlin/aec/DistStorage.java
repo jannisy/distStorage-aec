@@ -1,6 +1,5 @@
 package de.tuberlin.aec;
 
-import de.tub.ise.hermes.Request;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
 import de.tuberlin.aec.util.NetworkConfiguration;

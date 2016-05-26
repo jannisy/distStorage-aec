@@ -1,6 +1,7 @@
 package de.tuberlin.aec.message;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,12 +14,12 @@ import de.tub.ise.hermes.Request;
  */
 public class DistoMessage extends Request{
 
-	public DistoMessage(List<Serializable> items, String target, String sender) {
-		super(items, target, sender);
-	}
 
 	public DistoMessage(String target, String sender) {
-		super(target, sender);
+		super((List<Serializable>) new ArrayList<Serializable>(), target, sender);
+	}
+	protected DistoMessage(List<Serializable> items, String target, String sender) {
+		super(items, target, sender);
 	}
 
 

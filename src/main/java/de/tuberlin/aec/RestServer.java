@@ -48,7 +48,7 @@ public class RestServer extends NanoHTTPD {
 		// TODO status
 		this.api.put(key, value);
 
-		String json = "{status: 'OK'}";
+		String json = "{status: 'TODO'}";
         return newFixedLengthResponse(json);
     }
     private Response serveDelete(IHTTPSession session) {

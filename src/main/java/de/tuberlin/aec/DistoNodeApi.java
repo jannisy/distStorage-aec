@@ -1,5 +1,6 @@
 package de.tuberlin.aec;
 
+import de.tuberlin.aec.communication.MessageSender;
 import de.tuberlin.aec.storage.LocalStorage;
 
 /**
@@ -11,13 +12,15 @@ import de.tuberlin.aec.storage.LocalStorage;
 public class DistoNodeApi {
 
 	private LocalStorage localStorage;
+	private MessageSender msgSender;
 
-	public DistoNodeApi(LocalStorage localStorage) {
+	public DistoNodeApi(LocalStorage localStorage, MessageSender msgSender) {
 		this.localStorage = localStorage;
+		this.msgSender = msgSender;
+		
 	}
 
 	public void put(String key, String value) {
-		
 	}
 	
 	public String get(String key) {
