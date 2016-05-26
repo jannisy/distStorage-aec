@@ -13,7 +13,7 @@ public class SyncWriteSuggestionMessage extends DistoMessage {
 		super(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION, sender);
 		setKey(key);
 		setValue(value);
-		setStartNode(value);
+		setStartNode(startNode);
 	}
 	public static SyncWriteSuggestionMessage createFromRequest(Request request) {
 		SyncWriteSuggestionMessage msg = new SyncWriteSuggestionMessage(request.getItems(), request.getOriginator());

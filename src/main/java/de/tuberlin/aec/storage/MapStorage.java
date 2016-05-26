@@ -35,10 +35,12 @@ public class MapStorage implements LocalStorage {
 		
 	}
 	public void lock(String key) {
+		System.out.println("LOCK " + key);
 		locked.put(key, true);
 		
 	}
 	public void unlock(String key) {
+		System.out.println("UNLOCK " + key);
 		locked.remove(key);
 		
 	}

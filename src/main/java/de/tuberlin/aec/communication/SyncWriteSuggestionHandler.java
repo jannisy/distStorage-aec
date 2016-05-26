@@ -6,6 +6,7 @@ import java.util.List;
 import de.tub.ise.hermes.IRequestHandler;
 import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Response;
+import de.tuberlin.aec.PendingRequest;
 import de.tuberlin.aec.message.SyncWriteSuggestionMessage;
 import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NetworkConfiguration;
@@ -34,21 +35,25 @@ public class SyncWriteSuggestionHandler implements IRequestHandler {
 		String startNode = msg.getStartNode();
 		String key = msg.getKey();
 		String value = msg.getValue();
+
+		InetSocketAddress originator = NetworkConfiguration.createAddressFromString(request.getOriginator());
 		
 		if(localStorage.isLocked(key)) {
 			boolean ack = false;
-			InetSocketAddress address = NetworkConfiguration.createAddressFromString(request.getOriginator());
-			msgSender.sendSyncWriteSuggestionResponse(address.getHostName(), address.getPort(), key, ack);
+			msgSender.sendSyncWriteSuggestionResponse(originator.getHostName(), originator.getPort(), key, ack);
 		} else {
 			List<String> neighbours = pathConfig.getNodeNeighbours(startNode, nodeConfig.getHostAndPort());
 			if(neighbours.isEmpty()) {
 				// no neighbours - reply with ACK immediately
 				boolean ack = true;
-				localStorage.put(key, value);
-				InetSocketAddress address = NetworkConfiguration.createAddressFromString(request.getOriginator());
-				msgSender.sendSyncWriteSuggestionResponse(address.getHostName(), address.getPort(), key, ack);
+				localStorage.lock(key);
+				msgSender.sendSyncWriteSuggestionResponse(originator.getHostName(), originator.getPort(), key, ack);
 			} else {
 				// TODO add Pending Request
+				PendingRequest pendingRequest = new PendingRequest(startNode, key, value);
+				pendingRequest.setResponseNode(originator);
+				pendingRequest.addNodesToNecessaryResponses(neighbours);
+				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
 				for(String neighbour : neighbours) {
 					InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);

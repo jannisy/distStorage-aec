@@ -16,9 +16,10 @@ public class SyncWriteCommitMessage extends DistoMessage {
 	private SyncWriteCommitMessage(List<Serializable> items, String sender) {
 		super(items, DistoNode.HANDLER_SYNC_WRITE_COMMIT, sender);
 	}
-	public SyncWriteCommitMessage(String key, String sender) {
+	public SyncWriteCommitMessage(String key, String value, String sender) {
 		super(DistoNode.HANDLER_SYNC_WRITE_COMMIT, sender);
 		setKey(key);
+		setValue(value);
 	}
 	
 	private String setKey(String key) {
@@ -28,6 +29,15 @@ public class SyncWriteCommitMessage extends DistoMessage {
 	public String getKey() {
 		HashMap<String, String> map = getRequestMap();
 		return map.get("key");
+	}
+
+	private String setValue(String value) {
+		HashMap<String, String> map = getRequestMap();
+		return map.put("value", value);
+	}
+	public String getValue() {
+		HashMap<String, String> map = getRequestMap();
+		return map.get("value");
 	}
 
 }

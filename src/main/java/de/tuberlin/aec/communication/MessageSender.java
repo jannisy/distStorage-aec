@@ -1,5 +1,7 @@
 package de.tuberlin.aec.communication;
 
+import java.util.concurrent.TimeUnit;
+
 import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Sender;
 import de.tuberlin.aec.message.SyncWriteCommitMessage;
@@ -17,18 +19,24 @@ public class MessageSender {
 		this.sender = sender;
 	}
     private void sendMessage(String host, int port, Request request) {
+	    try {
+	        TimeUnit.MILLISECONDS.sleep(100);
+	    } catch (InterruptedException e) {
+			e.printStackTrace();
+	    }
         Sender sender = new Sender(host, port);
         sender.sendMessage(request, 2000);
-        System.out.println("Message sent to " + host + ":" + port);
+        //System.out.println("Message sent to " + host + ":" + port);
     }
 
-    public void sendSyncWriteCommitMessage(String host, int port, String key) {
-        SyncWriteCommitMessage msg = new SyncWriteCommitMessage(key, sender);
+    public void sendSyncWriteCommitMessage(String host, int port, String key, String value) {
+        SyncWriteCommitMessage msg = new SyncWriteCommitMessage(key, value, sender);
         System.out.println("Send SyncWriteCommitMsg... host=" + host + ":" + port + ", key=" + key);
         sendMessage(host, port, msg);
     }
 
     public void sendSyncWriteSuggestion(String host, int port, String key, String value, String startNode) {
+        System.out.println("Send SyncWriteSuggestion host=" + host + ":" + port + ", key=" + key + ", startNode=" + startNode);
         SyncWriteSuggestionMessage msg = new SyncWriteSuggestionMessage(sender, key, value, startNode);
         sendMessage(host, port, msg);
     }

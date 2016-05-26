@@ -26,9 +26,12 @@ public class SyncWriteCommitHandler implements IRequestHandler {
 		SyncWriteCommitMessage msg = SyncWriteCommitMessage.createFromRequest(request);
 		
 		System.out.println("Received SyncWriteCommit Message with key=" + msg.getKey());
-		String keyToCommit = msg.getKey();
-		assert(localStorage.isLocked(keyToCommit));
-		localStorage.unlock(keyToCommit);
+		String key = msg.getKey();
+		String value = msg.getValue();
+		
+		assert(localStorage.isLocked(key));
+		localStorage.unlock(key);
+		localStorage.put(key, value);
 		
 		Response response = new Response("", true, request, "");
 		return response;

@@ -39,14 +39,14 @@ public class DistoNodeApi {
 			
 			List<String> neighbours = pathConfig.getNodeNeighbours(nodeConfig.getHostAndPort(), nodeConfig.getHostAndPort());
 			localStorage.setPendingRequest(key, pendingRequest);
+			localStorage.lock(key);
+			pendingRequest.addNodesToNecessaryResponses(neighbours);
 			
 			String startNode = nodeConfig.getHostAndPort();
 			for(String neighbour : neighbours) {
 				InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
-				pendingRequest.addNodeToNecessaryResponses(address);
 				msgSender.sendSyncWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode);
 			}
-			localStorage.lock(key);
 		}
 	}
 	

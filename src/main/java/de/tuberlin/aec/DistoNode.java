@@ -94,7 +94,7 @@ public class DistoNode {
 
 		/* Handlers */
 		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler(localStorage, pathConfig, nodeConfig, msgSender);
-		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler(localStorage, pathConfig, nodeConfig, msgSender);
+		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler(localStorage, pathConfig, nodeConfig, networkConfig, msgSender);
 		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler(localStorage, pathConfig, nodeConfig, msgSender);
 		
 		RequestHandlerRegistry reg = RequestHandlerRegistry.getInstance();

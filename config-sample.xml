@@ -15,8 +15,10 @@
 	</path>
 	<path start="localhost:5000">
 		<link src="localhost:5000" type="sync" target="localhost:5001"/>
+		<link src="localhost:5001" type="sync" target="localhost:5002"/>
 	</path>
 	<path start="localhost:5001">
 		<link src="localhost:5001" type="sync" target="localhost:5000"/>
+		<link src="localhost:5001" type="sync" target="localhost:5002"/>
 	</path>
 </replicationpaths>

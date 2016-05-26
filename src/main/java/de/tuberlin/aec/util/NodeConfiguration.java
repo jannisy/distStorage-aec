@@ -1,5 +1,6 @@
 package de.tuberlin.aec.util;
 
+import java.net.InetSocketAddress;
 
 /**
  * This class encapsulates the configuration of one Disto Node.
@@ -42,5 +43,9 @@ public class NodeConfiguration {
 
 	public void setRestPort(int restPort) {
 		this.restPort = restPort;
+	}
+	
+	public InetSocketAddress getSocket() {
+		return NetworkConfiguration.createAddressFromString(this.getHostAndPort());
 	}
 }

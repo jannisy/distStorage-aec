@@ -4,6 +4,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tuberlin.aec.util.NetworkConfiguration;
+
 /**
  * A pending request represents a PUT request which is not yet complete.
  * This class contains all the necessary information on the request.
@@ -20,6 +22,7 @@ public class PendingRequest {
 	private String value;
 	
 	private List<InetSocketAddress> necessaryResponses;
+	private InetSocketAddress responseNode;
 
 	/**
 	 * 
@@ -34,7 +37,7 @@ public class PendingRequest {
 		
 		this.necessaryResponses = new ArrayList<InetSocketAddress>();
 	}
-	
+
 	/**
 	 * Adds a node to the necessary responses list.
 	 * The necessary responses list is a list with host names from all
@@ -42,6 +45,17 @@ public class PendingRequest {
 	 */
 	public void addNodeToNecessaryResponses(InetSocketAddress a) {
 		this.necessaryResponses.add(a);
+	}
+	/**
+	 * Adds all nodes in the given list to the necessary responses list.
+	 * The necessary responses list is a list with host names from all
+	 * nodes which we require a response from.
+	 */
+	public void addNodesToNecessaryResponses(List<String> list) {
+		for(String node : list) {
+			InetSocketAddress address = NetworkConfiguration.createAddressFromString(node);
+			this.addNodeToNecessaryResponses(address);
+		}
 	}
 	
 	/**
@@ -51,6 +65,21 @@ public class PendingRequest {
 	 */
 	public void removeNodeFromNecessaryResponses(InetSocketAddress a) {
 		this.necessaryResponses.remove(a);
+	}
+
+	/**
+	 * sets the node which should receive the response of the request
+	 * @param node the response node
+	 */
+	public void setResponseNode(InetSocketAddress node) {
+		this.responseNode = node;
+	}
+	/**
+	 * returns the node which should receive the response of the request
+	 * @return the node which should receive the response of the request
+	 */
+	public InetSocketAddress getResponseNode() {
+		return responseNode;
 	}
 	
 	/**
