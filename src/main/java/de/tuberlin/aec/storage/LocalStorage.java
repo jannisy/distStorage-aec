@@ -1,5 +1,7 @@
 package de.tuberlin.aec.storage;
 
+import de.tuberlin.aec.PendingRequest;
+
 /**
  * This class represents the local storage of one node
  * of the key value store.
@@ -45,6 +47,23 @@ public interface LocalStorage {
 	 * @return true if the key value pair with the given key is locked
 	 */
 	public boolean isLocked(String key);
+
+	/**
+	 * returns the pending request for the given key
+	 * @param key the key
+	 * @return the pending request for the given key
+	 */
+	public PendingRequest getPendingRequest(String key);
+	/**
+	 * deletes the pending request for the given key
+	 * @param key the key
+	 */
+	public void removePendingRequest(String key);
+	/**
+	 * sets the pending request for the given key.
+	 * @param key the key
+	 */
+	public void setPendingRequest(String key, PendingRequest request);
 	
 
 }

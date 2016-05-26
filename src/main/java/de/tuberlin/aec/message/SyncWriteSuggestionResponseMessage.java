@@ -19,18 +19,18 @@ public class SyncWriteSuggestionResponseMessage extends DistoMessage {
 		return msg;
 	}
 	private SyncWriteSuggestionResponseMessage(List<Serializable> items, String sender) {
-		super(items, DistoNode.HANDLER_SYNC_WRITE_COMMIT, sender);
+		super(items, DistoNode.HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE, sender);
 	}
 	
 	private void setResponse(boolean ack) {
 		HashMap<String, String> map = getRequestMap();
 		String stringAck = ack ? "1" : "0";
-		map.put("key", stringAck);
+		map.put("ack", stringAck);
 	}
 	
 	public boolean getResponse() {
 		HashMap<String, String> map = getRequestMap();
-		if(map.containsKey("ack") && map.get("key").equals("1")) {
+		if(map.containsKey("ack") && map.get("ack").equals("1")) {
 			return true;
 		} else {
 			return false;

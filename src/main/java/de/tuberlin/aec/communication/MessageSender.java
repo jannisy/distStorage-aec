@@ -34,7 +34,8 @@ public class MessageSender {
     }
 
     public void sendSyncWriteSuggestionResponse(String host, int port, String key, boolean ack) {
-        SyncWriteSuggestionResponseMessage msg = new SyncWriteSuggestionResponseMessage(key, ack, host);
+        System.out.println("Send SyncWriteSuggResponse host=" + host + ":" + port + ", key=" + key + ", ack=" + ack);
+        SyncWriteSuggestionResponseMessage msg = new SyncWriteSuggestionResponseMessage(key, ack, sender);
         sendMessage(host, port, msg);
     }
 }

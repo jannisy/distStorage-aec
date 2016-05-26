@@ -34,13 +34,19 @@ public class DistoNodeApi {
 		if(localStorage.isLocked(key)) {
 			System.out.println("Another Put Request is pending. Key is currently locked. Abort request");
 		} else {
+			
+			PendingRequest pendingRequest = new PendingRequest(nodeConfig.getHostAndPort(), key, value);
+			
 			List<String> neighbours = pathConfig.getNodeNeighbours(nodeConfig.getHostAndPort(), nodeConfig.getHostAndPort());
-			localStorage.lock(key);
+			localStorage.setPendingRequest(key, pendingRequest);
+			
 			String startNode = nodeConfig.getHostAndPort();
 			for(String neighbour : neighbours) {
 				InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
+				pendingRequest.addNodeToNecessaryResponses(address);
 				msgSender.sendSyncWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode);
 			}
+			localStorage.lock(key);
 		}
 	}
 	

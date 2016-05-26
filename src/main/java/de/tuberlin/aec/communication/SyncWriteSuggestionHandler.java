@@ -41,12 +41,14 @@ public class SyncWriteSuggestionHandler implements IRequestHandler {
 			msgSender.sendSyncWriteSuggestionResponse(address.getHostName(), address.getPort(), key, ack);
 		} else {
 			List<String> neighbours = pathConfig.getNodeNeighbours(startNode, nodeConfig.getHostAndPort());
-			localStorage.put(key, value);
 			if(neighbours.isEmpty()) {
-				boolean ack = false;
+				// no neighbours - reply with ACK immediately
+				boolean ack = true;
+				localStorage.put(key, value);
 				InetSocketAddress address = NetworkConfiguration.createAddressFromString(request.getOriginator());
 				msgSender.sendSyncWriteSuggestionResponse(address.getHostName(), address.getPort(), key, ack);
 			} else {
+				// TODO add Pending Request
 				localStorage.lock(key);
 				for(String neighbour : neighbours) {
 					InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
