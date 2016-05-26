@@ -69,7 +69,9 @@ public class RestServer extends NanoHTTPD {
     	}
 		String key = uriParts[2];
 		String value = this.api.get(key);
-        return newFixedLengthResponse("TODO");
+
+		String json = "{\n\tkey: '" + key + "',\n\tvalue: '" + value + "'\n}";
+        return newFixedLengthResponse(json);
     }
     private Response serveHelp(IHTTPSession session) {
         String msg = "<html><body><h1>Key-Value Store: REST API</h1>\n";

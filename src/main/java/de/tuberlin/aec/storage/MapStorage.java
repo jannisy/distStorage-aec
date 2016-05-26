@@ -40,7 +40,11 @@ public class MapStorage implements LocalStorage {
 		
 	}
 	public boolean isLocked(String key) {
-		return this.locked.get(key);
+		if(locked.containsKey(key)) {
+			return this.locked.get(key);
+		} else {
+			return false;
+		}
 		
 	}
 

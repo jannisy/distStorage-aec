@@ -5,13 +5,21 @@ import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Response;
 import de.tuberlin.aec.message.SyncWriteCommitMessage;
 import de.tuberlin.aec.storage.LocalStorage;
+import de.tuberlin.aec.util.NodeConfiguration;
+import de.tuberlin.aec.util.PathConfiguration;
 
 public class SyncWriteCommitHandler implements IRequestHandler {
 
 	private LocalStorage localStorage;
+	private PathConfiguration pathConfig;
+	private MessageSender msgSender;
+	private NodeConfiguration nodeConfig;
 
-	public SyncWriteCommitHandler(LocalStorage localStorage) {
+	public SyncWriteCommitHandler(LocalStorage localStorage, PathConfiguration pathConfig, NodeConfiguration nodeConfig, MessageSender msgSender) {
 		this.localStorage = localStorage;
+		this.pathConfig = pathConfig;
+		this.msgSender = msgSender;
+		this.nodeConfig = nodeConfig;
 	}
 	@Override
 	public Response handleRequest(Request request) {

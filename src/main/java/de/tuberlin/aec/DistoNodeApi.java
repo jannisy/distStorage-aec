@@ -13,7 +13,6 @@ import de.tuberlin.aec.util.PathConfiguration;
  * This class receives requests for a disto node.
  * Its methods are called by the REST API.
  * 
- *
  */
 public class DistoNodeApi {
 
@@ -27,19 +26,31 @@ public class DistoNodeApi {
 		this.msgSender = msgSender;
 		this.nodeConfig = nodeConfig;
 		this.pathConfig = pathConfig;
-		
 	}
 
 	public void put(String key, String value) {
-		List<String> neighbours = pathConfig.getNodeNeighbours(nodeConfig.getHostAndPort(), nodeConfig.getHostAndPort());
-		for(String neighbour : neighbours) {
-			InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
-			msgSender.sendSyncWriteSuggestion(address.getHostName(), address.getPort(), key, value);
+		System.out.println("# API PUT REQUEST: [" + key + ", " + value + "]");
+
+		if(localStorage.isLocked(key)) {
+			System.out.println("Another Put Request is pending. Key is currently locked. Abort request");
+		} else {
+			List<String> neighbours = pathConfig.getNodeNeighbours(nodeConfig.getHostAndPort(), nodeConfig.getHostAndPort());
+			localStorage.lock(key);
+			String startNode = nodeConfig.getHostAndPort();
+			for(String neighbour : neighbours) {
+				InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
+				msgSender.sendSyncWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode);
+			}
 		}
 	}
 	
 	public String get(String key) {
-		return "";
+		String value = localStorage.get(key);
+		if(value == null) {
+			return "UNDEFINED";
+		} else {
+			return value;
+		}
 	}
 	
 	public void delete(String key) {

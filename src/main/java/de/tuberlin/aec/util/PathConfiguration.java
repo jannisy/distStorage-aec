@@ -117,7 +117,7 @@ public class PathConfiguration {
 			Document doc = builder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
 
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+//			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 			
 			NodeList paths = doc.getDocumentElement().getChildNodes();
 
@@ -130,7 +130,7 @@ public class PathConfiguration {
 					if(!start.equals(startNode)) {
 						continue;
 					}
-					System.out.println("Found path for start=" + start);
+//					System.out.println("Found path for start=" + start);
 
 					NodeList links = pathElement.getChildNodes();
 
@@ -143,7 +143,7 @@ public class PathConfiguration {
 								continue;
 							}
 							String type = linkElement.getAttribute("type");
-							System.out.println("   Link src=" + src + ", type=" + type);
+//							System.out.println("   Link src=" + src + ", type=" + type);
 							if(type.equals(PathConfiguration.LINK_TYPE_SYNC)) {
 								String target = linkElement.getAttribute("target");
 								neighbours.add(target);
@@ -158,7 +158,7 @@ public class PathConfiguration {
 								
 							} else {
 								// TODO config file error
-						        System.out.println( "Error: invalid link type." );
+//						        System.out.println( "Error: invalid link type." );
 							}
 							
 						}

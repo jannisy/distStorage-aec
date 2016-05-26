@@ -28,13 +28,13 @@ public class MessageSender {
         sendMessage(host, port, msg);
     }
 
-    public void sendSyncWriteSuggestion(String host, int port, String key, String value) {
-        SyncWriteSuggestionMessage msg = new SyncWriteSuggestionMessage(sender, key, value);
+    public void sendSyncWriteSuggestion(String host, int port, String key, String value, String startNode) {
+        SyncWriteSuggestionMessage msg = new SyncWriteSuggestionMessage(sender, key, value, startNode);
         sendMessage(host, port, msg);
     }
 
-    public void sendSyncWriteSuggestionResponse(String host, int port, boolean ack) {
-        SyncWriteSuggestionResponseMessage msg = new SyncWriteSuggestionResponseMessage(false, host);
+    public void sendSyncWriteSuggestionResponse(String host, int port, String key, boolean ack) {
+        SyncWriteSuggestionResponseMessage msg = new SyncWriteSuggestionResponseMessage(key, ack, host);
         sendMessage(host, port, msg);
     }
 }

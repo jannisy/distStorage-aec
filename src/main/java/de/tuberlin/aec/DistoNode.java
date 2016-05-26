@@ -51,6 +51,7 @@ public class DistoNode {
 	 * the local storage 
 	 */
 	private LocalStorage localStorage;
+	private MessageSender msgSender;
 	
 	/**
 	 * creates a new DistoNode with the given configuration
@@ -64,7 +65,7 @@ public class DistoNode {
 		this.networkConfig = networkConfig;
 		this.nodeConfig = nodeConfig;
 		
-		MessageSender msgSender = new MessageSender(nodeConfig.getHostAndPort());
+		msgSender = new MessageSender(nodeConfig.getHostAndPort());
 		localStorage = new MapStorage();
 		api = new DistoNodeApi(localStorage, msgSender, nodeConfig, pathConfig);
 		
@@ -92,9 +93,9 @@ public class DistoNode {
 	private void startHermes() {
 
 		/* Handlers */
-		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler(localStorage);
-		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler(localStorage);
-		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler(localStorage);
+		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler(localStorage, pathConfig, nodeConfig, msgSender);
+		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler(localStorage, pathConfig, nodeConfig, msgSender);
+		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler(localStorage, pathConfig, nodeConfig, msgSender);
 		
 		RequestHandlerRegistry reg = RequestHandlerRegistry.getInstance();
 		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_COMMIT, syncWriteCommitHandler);
