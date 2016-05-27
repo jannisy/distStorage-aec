@@ -8,6 +8,7 @@ import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
+import de.tuberlin.aec.util.PathLink;
 
 /**
  * This class receives requests for a disto node.
@@ -34,19 +35,31 @@ public class DistoNodeApi {
 		if(localStorage.isLocked(key)) {
 			System.out.println("Another Put Request is pending. Key is currently locked. Abort request");
 		} else {
-			
-			PendingRequest pendingRequest = new PendingRequest(nodeConfig.getHostAndPort(), key, value);
-			
-			List<String> neighbours = pathConfig.getNodeNeighbours(nodeConfig.getHostAndPort(), nodeConfig.getHostAndPort());
-			localStorage.setPendingRequest(key, pendingRequest);
-			localStorage.lock(key);
-			pendingRequest.addNodesToNecessaryResponses(neighbours);
-			
-			// TODO differentiate sync/async
 			String startNode = nodeConfig.getHostAndPort();
-			for(String neighbour : neighbours) {
-				InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
+
+			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, startNode);
+			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, startNode);
+			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, startNode);
+			
+			if(!syncPaths.isEmpty()) {
+				boolean expectResponse = false; // This is the starting node - no response required.
+				PendingRequest pendingRequest = new PendingRequest(startNode, key, value, expectResponse);
+				pendingRequest.addNodesToNecessaryResponses(allNeighbours);
+				localStorage.setPendingRequest(key, pendingRequest);
+				localStorage.lock(key);
+			} else {
+				// no neighbours or only async
+				// -> commit immediately
+				localStorage.put(key, value);
+			}
+			for(PathLink syncPath : syncPaths) {
+				InetSocketAddress address = NetworkConfiguration.createAddressFromString(syncPath.getTarget());
 				boolean expectResponse = true;
+				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
+			}
+			for(PathLink asyncPath : asyncPaths) {
+				InetSocketAddress address = NetworkConfiguration.createAddressFromString(asyncPath.getTarget());
+				boolean expectResponse = false;
 				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
 			}
 		}

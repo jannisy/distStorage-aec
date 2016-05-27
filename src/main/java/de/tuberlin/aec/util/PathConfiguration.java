@@ -148,10 +148,10 @@ public class PathConfiguration {
 	}
 
 	public List<PathLink> getSyncNodePathLinks(String startNode, String node) {
-		return getNodePathLinksByType(startNode, startNode, LINK_TYPE_SYNC);
+		return getNodePathLinksByType(startNode, node, LINK_TYPE_SYNC);
 	}
 	public List<PathLink> getAsyncNodePathLinks(String startNode, String node) {
-		return getNodePathLinksByType(startNode, startNode, LINK_TYPE_ASYNC);
+		return getNodePathLinksByType(startNode, node, LINK_TYPE_ASYNC);
 	}
 
 	private List<PathLink> getNodePathLinksByType(String startNode, String node, String type) {
@@ -163,7 +163,7 @@ public class PathConfiguration {
 			List<PathLink> allLinks = linksOfStartNode.get(node);
 			if(allLinks != null) {
 				for(PathLink link : allLinks) {
-					if(link.getType() == type) {
+					if(link.getType().equals(type)) {
 						links.add(link);
 					}
 				}

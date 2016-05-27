@@ -46,7 +46,7 @@ public class WriteSuggestionHandler implements IRequestHandler {
 
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
-			List<PathLink> asyncPaths = pathConfig.getSyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
+			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
 			
 			if(!syncPaths.isEmpty()) {
 				PendingRequest pendingRequest = new PendingRequest(startNode, key, value, msg.getExpectResponse());
@@ -58,7 +58,13 @@ public class WriteSuggestionHandler implements IRequestHandler {
 				// no neighbours or only async
 				// -> reply with ACK immediately
 				boolean ack = true;
-				localStorage.lock(key); // TODO do we need to lock here?
+				if(true) {
+					// commit immediately
+					localStorage.put(key, value);
+				} else {
+					// lock and expect commit later?
+					localStorage.lock(key); 
+				}
 				if(msg.getExpectResponse()) {
 					msgSender.sendSyncWriteSuggestionResponse(originator.getHostName(), originator.getPort(), key, ack);
 				}
