@@ -23,6 +23,7 @@ public class PendingRequest {
 	
 	private List<InetSocketAddress> necessaryResponses;
 	private InetSocketAddress responseNode;
+	private boolean expectResponse;
 
 	/**
 	 * 
@@ -30,10 +31,11 @@ public class PendingRequest {
 	 * @param key
 	 * @param value
 	 */
-	public PendingRequest(String startNode, String key, String value) {
+	public PendingRequest(String startNode, String key, String value, boolean expectResponse) {
 		this.startNode = startNode;
 		this.key = key;
 		this.value = value;
+		this.expectResponse = expectResponse;
 		
 		this.necessaryResponses = new ArrayList<InetSocketAddress>();
 	}
@@ -111,6 +113,10 @@ public class PendingRequest {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public boolean getExpectResponse() {
+		return expectResponse;
 	}
 
 }

@@ -4,9 +4,9 @@ import java.util.concurrent.TimeUnit;
 
 import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Sender;
-import de.tuberlin.aec.message.SyncWriteCommitMessage;
-import de.tuberlin.aec.message.SyncWriteSuggestionMessage;
-import de.tuberlin.aec.message.SyncWriteSuggestionResponseMessage;
+import de.tuberlin.aec.message.WriteCommitMessage;
+import de.tuberlin.aec.message.WriteSuggestionMessage;
+import de.tuberlin.aec.message.WriteSuggestionResponseMessage;
 
 /**
  * Created by joh-mue on 24/05/16.
@@ -30,20 +30,20 @@ public class MessageSender {
     }
 
     public void sendSyncWriteCommitMessage(String host, int port, String key, String value) {
-        SyncWriteCommitMessage msg = new SyncWriteCommitMessage(key, value, sender);
+        WriteCommitMessage msg = new WriteCommitMessage(key, value, sender);
         System.out.println("Send SyncWriteCommitMsg... host=" + host + ":" + port + ", key=" + key);
         sendMessage(host, port, msg);
     }
 
-    public void sendSyncWriteSuggestion(String host, int port, String key, String value, String startNode) {
+    public void sendWriteSuggestion(String host, int port, String key, String value, String startNode, boolean expectResponse) {
         System.out.println("Send SyncWriteSuggestion host=" + host + ":" + port + ", key=" + key + ", startNode=" + startNode);
-        SyncWriteSuggestionMessage msg = new SyncWriteSuggestionMessage(sender, key, value, startNode);
+        WriteSuggestionMessage msg = new WriteSuggestionMessage(sender, key, value, startNode, expectResponse);
         sendMessage(host, port, msg);
     }
 
     public void sendSyncWriteSuggestionResponse(String host, int port, String key, boolean ack) {
         System.out.println("Send SyncWriteSuggResponse host=" + host + ":" + port + ", key=" + key + ", ack=" + ack);
-        SyncWriteSuggestionResponseMessage msg = new SyncWriteSuggestionResponseMessage(key, ack, sender);
+        WriteSuggestionResponseMessage msg = new WriteSuggestionResponseMessage(key, ack, sender);
         sendMessage(host, port, msg);
     }
 }

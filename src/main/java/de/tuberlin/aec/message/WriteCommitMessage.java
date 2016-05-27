@@ -7,16 +7,16 @@ import java.util.List;
 import de.tub.ise.hermes.Request;
 import de.tuberlin.aec.DistoNode;
 
-public class SyncWriteCommitMessage extends DistoMessage {
+public class WriteCommitMessage extends DistoMessage {
 	
-	public static SyncWriteCommitMessage createFromRequest(Request request) {
-		SyncWriteCommitMessage msg = new SyncWriteCommitMessage(request.getItems(), request.getOriginator());
+	public static WriteCommitMessage createFromRequest(Request request) {
+		WriteCommitMessage msg = new WriteCommitMessage(request.getItems(), request.getOriginator());
 		return msg;
 	}
-	private SyncWriteCommitMessage(List<Serializable> items, String sender) {
+	private WriteCommitMessage(List<Serializable> items, String sender) {
 		super(items, DistoNode.HANDLER_SYNC_WRITE_COMMIT, sender);
 	}
-	public SyncWriteCommitMessage(String key, String value, String sender) {
+	public WriteCommitMessage(String key, String value, String sender) {
 		super(DistoNode.HANDLER_SYNC_WRITE_COMMIT, sender);
 		setKey(key);
 		setValue(value);

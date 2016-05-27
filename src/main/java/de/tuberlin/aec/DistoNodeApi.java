@@ -42,10 +42,12 @@ public class DistoNodeApi {
 			localStorage.lock(key);
 			pendingRequest.addNodesToNecessaryResponses(neighbours);
 			
+			// TODO differentiate sync/async
 			String startNode = nodeConfig.getHostAndPort();
 			for(String neighbour : neighbours) {
 				InetSocketAddress address = NetworkConfiguration.createAddressFromString(neighbour);
-				msgSender.sendSyncWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode);
+				boolean expectResponse = true;
+				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
 			}
 		}
 	}

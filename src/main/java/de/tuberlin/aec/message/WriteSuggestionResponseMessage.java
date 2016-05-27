@@ -7,18 +7,18 @@ import java.util.List;
 import de.tub.ise.hermes.Request;
 import de.tuberlin.aec.DistoNode;
 
-public class SyncWriteSuggestionResponseMessage extends DistoMessage {
+public class WriteSuggestionResponseMessage extends DistoMessage {
 
-	public SyncWriteSuggestionResponseMessage(String key, boolean ack, String sender) {
+	public WriteSuggestionResponseMessage(String key, boolean ack, String sender) {
 		super(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE, sender);
 		setResponse(ack);
 		setKey(key);
 	}
-	public static SyncWriteSuggestionResponseMessage createFromRequest(Request request) {
-		SyncWriteSuggestionResponseMessage msg = new SyncWriteSuggestionResponseMessage(request.getItems(), request.getOriginator());
+	public static WriteSuggestionResponseMessage createFromRequest(Request request) {
+		WriteSuggestionResponseMessage msg = new WriteSuggestionResponseMessage(request.getItems(), request.getOriginator());
 		return msg;
 	}
-	private SyncWriteSuggestionResponseMessage(List<Serializable> items, String sender) {
+	private WriteSuggestionResponseMessage(List<Serializable> items, String sender) {
 		super(items, DistoNode.HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE, sender);
 	}
 	

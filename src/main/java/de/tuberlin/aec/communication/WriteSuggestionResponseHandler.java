@@ -6,13 +6,13 @@ import de.tub.ise.hermes.IRequestHandler;
 import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Response;
 import de.tuberlin.aec.PendingRequest;
-import de.tuberlin.aec.message.SyncWriteSuggestionResponseMessage;
+import de.tuberlin.aec.message.WriteSuggestionResponseMessage;
 import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
 
-public class SyncWriteSuggestionResponseHandler implements IRequestHandler {
+public class WriteSuggestionResponseHandler implements IRequestHandler {
 
 	private LocalStorage localStorage;
 	private PathConfiguration pathConfig;
@@ -20,7 +20,7 @@ public class SyncWriteSuggestionResponseHandler implements IRequestHandler {
 	private NodeConfiguration nodeConfig;
 	private NetworkConfiguration networkConfig;
 
-	public SyncWriteSuggestionResponseHandler(LocalStorage localStorage, PathConfiguration pathConfig,
+	public WriteSuggestionResponseHandler(LocalStorage localStorage, PathConfiguration pathConfig,
 			NodeConfiguration nodeConfig, NetworkConfiguration networkConfig, MessageSender msgSender) {
 		this.localStorage = localStorage;
 		this.pathConfig = pathConfig;
@@ -32,7 +32,7 @@ public class SyncWriteSuggestionResponseHandler implements IRequestHandler {
 	@Override
 	public Response handleRequest(Request request) {
 		System.out.println("Received SyncWriteSuggestionResponse Message.");
-		SyncWriteSuggestionResponseMessage msg = SyncWriteSuggestionResponseMessage.createFromRequest(request);
+		WriteSuggestionResponseMessage msg = WriteSuggestionResponseMessage.createFromRequest(request);
 		String key = msg.getKey();
 		// TODO: handle the case where this node is not the start node -> send response back 
 		PendingRequest pendingRequest = localStorage.getPendingRequest(key);
@@ -52,7 +52,7 @@ public class SyncWriteSuggestionResponseHandler implements IRequestHandler {
 		Response response = new Response("", true, request, "");
 		return response;
 	}
-	private void handleRequestIntermediaryNode(SyncWriteSuggestionResponseMessage msg, String key, Request request, PendingRequest pendingRequest) {
+	private void handleRequestIntermediaryNode(WriteSuggestionResponseMessage msg, String key, Request request, PendingRequest pendingRequest) {
 
 		boolean ack = msg.getResponse();
 		if(ack) {
@@ -60,23 +60,27 @@ public class SyncWriteSuggestionResponseHandler implements IRequestHandler {
 			pendingRequest.removeNodeFromNecessaryResponses(address);
 			
 			if(!pendingRequest.responsesPending()) {
-				boolean responseAck = true;
-				msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
-						pendingRequest.getResponseNode().getPort(), key, responseAck);
+				if(pendingRequest.getExpectResponse()) {
+					boolean responseAck = true;
+					msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
+							pendingRequest.getResponseNode().getPort(), key, responseAck);
+				}
 			} else {
 				System.out.println("  Awaiting further response messages.");
 			}
 		} else {
-			// Negative Response - Send NACK
-			boolean responseAck = false;
-			msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
-					pendingRequest.getResponseNode().getPort(), key, responseAck);
+			if(pendingRequest.getExpectResponse()) {
+				// Negative Response - Send NACK
+				boolean responseAck = false;
+				msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
+						pendingRequest.getResponseNode().getPort(), key, responseAck);
+			}
 			localStorage.unlock(key);
 			localStorage.removePendingRequest(key);
 		}
 	}
 	
-	private void handleRequestStartNode(SyncWriteSuggestionResponseMessage msg, String key, Request request, PendingRequest pendingRequest) {
+	private void handleRequestStartNode(WriteSuggestionResponseMessage msg, String key, Request request, PendingRequest pendingRequest) {
 
 		boolean ack = msg.getResponse();
 		if(ack) {

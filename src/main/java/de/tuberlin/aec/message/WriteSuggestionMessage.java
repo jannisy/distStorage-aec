@@ -7,19 +7,20 @@ import java.util.List;
 import de.tub.ise.hermes.Request;
 import de.tuberlin.aec.DistoNode;
 
-public class SyncWriteSuggestionMessage extends DistoMessage {
+public class WriteSuggestionMessage extends DistoMessage {
 
-	public SyncWriteSuggestionMessage(String sender, String key, String value, String startNode) {
+	public WriteSuggestionMessage(String sender, String key, String value, String startNode, boolean expectResponse) {
 		super(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION, sender);
 		setKey(key);
 		setValue(value);
 		setStartNode(startNode);
+		setExpectResponse(expectResponse);
 	}
-	public static SyncWriteSuggestionMessage createFromRequest(Request request) {
-		SyncWriteSuggestionMessage msg = new SyncWriteSuggestionMessage(request.getItems(), request.getOriginator());
+	public static WriteSuggestionMessage createFromRequest(Request request) {
+		WriteSuggestionMessage msg = new WriteSuggestionMessage(request.getItems(), request.getOriginator());
 		return msg;
 	}
-	private SyncWriteSuggestionMessage(List<Serializable> items, String sender) {
+	private WriteSuggestionMessage(List<Serializable> items, String sender) {
 		super(items, DistoNode.HANDLER_SYNC_WRITE_COMMIT, sender);
 	}
 
@@ -49,6 +50,21 @@ public class SyncWriteSuggestionMessage extends DistoMessage {
 	public String getStartNode() {
 		HashMap<String, String> map = getRequestMap();
 		return map.get("startNode");
+	}
+	private void setExpectResponse(boolean expectResponse) {
+		HashMap<String, String> map = getRequestMap();
+		String stringAck = expectResponse ? "1" : "0";
+		map.put("expectResponse", stringAck);
+	}
+	
+	public boolean getExpectResponse() {
+		HashMap<String, String> map = getRequestMap();
+		if(map.containsKey("expectResponse") && map.get("expectResponse").equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 	
 

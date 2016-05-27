@@ -130,7 +130,7 @@ public class PathConfiguration {
 	        System.out.println( "Configuration Error - Invalid link type: " + type );
 		}
 	}
-	
+
 	public List<String> getNodeNeighbours(String startNode, String node) {
 
 		List<String> neighbours = new ArrayList<String>();
@@ -144,6 +144,32 @@ public class PathConfiguration {
 			}
 		}
 		return neighbours;
+		
+	}
+
+	public List<PathLink> getSyncNodePathLinks(String startNode, String node) {
+		return getNodePathLinksByType(startNode, startNode, LINK_TYPE_SYNC);
+	}
+	public List<PathLink> getAsyncNodePathLinks(String startNode, String node) {
+		return getNodePathLinksByType(startNode, startNode, LINK_TYPE_ASYNC);
+	}
+
+	private List<PathLink> getNodePathLinksByType(String startNode, String node, String type) {
+
+		List<PathLink> links = new ArrayList<PathLink>();
+		
+		Map<String, List<PathLink>> linksOfStartNode = config.get(startNode);
+		if(linksOfStartNode != null) {
+			List<PathLink> allLinks = linksOfStartNode.get(node);
+			if(allLinks != null) {
+				for(PathLink link : allLinks) {
+					if(link.getType() == type) {
+						links.add(link);
+					}
+				}
+			}
+		}
+		return links;
 		
 	}
 }

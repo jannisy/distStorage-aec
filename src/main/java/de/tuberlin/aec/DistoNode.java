@@ -6,9 +6,9 @@ import java.util.List;
 import de.tub.ise.hermes.Receiver;
 import de.tub.ise.hermes.RequestHandlerRegistry;
 import de.tuberlin.aec.communication.MessageSender;
-import de.tuberlin.aec.communication.SyncWriteCommitHandler;
-import de.tuberlin.aec.communication.SyncWriteSuggestionHandler;
-import de.tuberlin.aec.communication.SyncWriteSuggestionResponseHandler;
+import de.tuberlin.aec.communication.WriteCommitHandler;
+import de.tuberlin.aec.communication.WriteSuggestionHandler;
+import de.tuberlin.aec.communication.WriteSuggestionResponseHandler;
 import de.tuberlin.aec.storage.MapStorage;
 import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NetworkConfiguration;
@@ -93,9 +93,9 @@ public class DistoNode {
 	private void startHermes() {
 
 		/* Handlers */
-		SyncWriteSuggestionHandler syncWriteSuggestionHandler = new SyncWriteSuggestionHandler(localStorage, pathConfig, nodeConfig, msgSender);
-		SyncWriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new SyncWriteSuggestionResponseHandler(localStorage, pathConfig, nodeConfig, networkConfig, msgSender);
-		SyncWriteCommitHandler syncWriteCommitHandler = new SyncWriteCommitHandler(localStorage, pathConfig, nodeConfig, msgSender);
+		WriteSuggestionHandler syncWriteSuggestionHandler = new WriteSuggestionHandler(localStorage, pathConfig, nodeConfig, msgSender);
+		WriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new WriteSuggestionResponseHandler(localStorage, pathConfig, nodeConfig, networkConfig, msgSender);
+		WriteCommitHandler syncWriteCommitHandler = new WriteCommitHandler(localStorage, pathConfig, nodeConfig, msgSender);
 		
 		RequestHandlerRegistry reg = RequestHandlerRegistry.getInstance();
 		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_COMMIT, syncWriteCommitHandler);
