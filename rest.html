@@ -92,6 +92,7 @@
 					var key = $('#key').val();
 					var value = $('#value').val();
 					var restUrl;
+					$('#response').html("<div>Pending</div>");
 					if(buttonFunction == "PUT") {
 						restUrl = "/put/" + key + "/" + value;
 					} else if(buttonFunction == "GET") {

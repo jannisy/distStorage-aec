@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 import de.tuberlin.aec.communication.MessageSender;
+import de.tuberlin.aec.communication.PutResponse;
 import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
@@ -29,21 +30,24 @@ public class DistoNodeApi {
 		this.pathConfig = pathConfig;
 	}
 
-	public void put(String key, String value) {
+	public PutResponse put(String key, String value) {
 		System.out.println("# API PUT REQUEST: [" + key + ", " + value + "]");
 
 		if(localStorage.isLocked(key)) {
 			System.out.println("Another Put Request is pending. Key is currently locked. Abort request");
+			PutResponse response = new PutResponse(false);
+			response.setErrorMessage("Pending request on this key.");
+			return response;
 		} else {
 			String startNode = nodeConfig.getHostAndPort();
 
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, startNode);
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, startNode);
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, startNode);
-			
+			PendingRequest pendingRequest = null;
 			if(!syncPaths.isEmpty()) {
 				boolean expectResponse = false; // This is the starting node - no response required.
-				PendingRequest pendingRequest = new PendingRequest(startNode, key, value, expectResponse);
+				pendingRequest = new PendingRequest(startNode, key, value, expectResponse);
 				pendingRequest.addNodesToNecessaryResponses(allNeighbours);
 				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
@@ -62,6 +66,22 @@ public class DistoNodeApi {
 				boolean expectResponse = false;
 				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
 			}
+
+			if(!syncPaths.isEmpty()) {
+				assert(pendingRequest != null);
+				if(!pendingRequest.isFinished()) {
+					synchronized(pendingRequest) {
+					    try {
+					    	pendingRequest.wait();
+					    } catch (InterruptedException e) {
+					        // Happens if someone interrupts the thread.
+					    }
+					}
+				}
+				return pendingRequest.getResponse();
+			} else {
+				return new PutResponse(true);
+			}
 		}
 	}
 	
@@ -77,4 +97,5 @@ public class DistoNodeApi {
 	public void delete(String key) {
 		
 	}
+	
 }

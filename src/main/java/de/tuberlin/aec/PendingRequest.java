@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tuberlin.aec.communication.PutResponse;
 import de.tuberlin.aec.util.NetworkConfiguration;
 
 /**
@@ -21,9 +22,12 @@ public class PendingRequest {
 
 	private String value;
 	
+	private boolean finished = false;
+	
 	private List<InetSocketAddress> necessaryResponses;
 	private InetSocketAddress responseNode;
 	private boolean expectResponse;
+	private PutResponse response;
 
 	/**
 	 * 
@@ -118,5 +122,25 @@ public class PendingRequest {
 	public boolean getExpectResponse() {
 		return expectResponse;
 	}
+
+	/**
+	 * returns true if the request is finished
+	 * @return
+	 */
+	public boolean isFinished() {
+		return finished;
+	}
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public PutResponse getResponse() {
+		return response;
+	}
+
+	public void setResponse(PutResponse response) {
+		this.response = response;
+	}
+	
 
 }

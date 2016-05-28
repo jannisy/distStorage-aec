@@ -1,5 +1,6 @@
 package de.tuberlin.aec.communication;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import de.tub.ise.hermes.Request;
@@ -19,14 +20,18 @@ public class MessageSender {
 		this.sender = sender;
 	}
     private void sendMessage(String host, int port, Request request) {
-	    try {
-	        TimeUnit.MILLISECONDS.sleep(100);
-	    } catch (InterruptedException e) {
-			e.printStackTrace();
-	    }
-        Sender sender = new Sender(host, port);
-        sender.sendMessage(request, 2000);
-        //System.out.println("Message sent to " + host + ":" + port);
+	    
+	    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+	    exec.schedule(new Runnable() {
+	              public void run() {
+	                  Sender sender = new Sender(host, port);
+	                  sender.sendMessage(request, 2000);
+	                  //System.out.println("Message sent to " + host + ":" + port);
+	              }
+	         }, 500, TimeUnit.MILLISECONDS);
+	    
+	    
     }
 
     public void sendSyncWriteCommitMessage(String host, int port, String key, String value) {

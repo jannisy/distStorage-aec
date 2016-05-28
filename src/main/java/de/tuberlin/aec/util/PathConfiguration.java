@@ -56,8 +56,6 @@ public class PathConfiguration {
 
 			Document doc = builder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
-
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 			
 			NodeList paths = doc.getDocumentElement().getChildNodes();
 

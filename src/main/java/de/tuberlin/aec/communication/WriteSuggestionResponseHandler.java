@@ -96,6 +96,11 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 			// Negative Response - Abort put
 			handleRequestAbort(key, pendingRequest);
 		}
+		synchronized(pendingRequest) {
+			pendingRequest.setFinished(true);
+			pendingRequest.notifyAll();
+			System.out.println("Notify");
+		}
 	}
 
 	/**
@@ -107,6 +112,9 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 		System.out.println("Abort Request: [" + key + ", " + pendingRequest.getValue() + "]");
 		localStorage.unlock(key);
 		localStorage.removePendingRequest(key);
+		PutResponse response = new PutResponse(false);
+		response.setErrorMessage("Not all nodes could commit. Aborted transaction.");
+		pendingRequest.setResponse(response);
 		
 	}
 	
@@ -120,6 +128,9 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 		localStorage.unlock(key);
 		localStorage.removePendingRequest(key);
 		localStorage.put(key, pendingRequest.getValue());
+
+		PutResponse response = new PutResponse(true);
+		pendingRequest.setResponse(response);
 		sendCommitMessages(key, pendingRequest.getValue());
 	}
 	

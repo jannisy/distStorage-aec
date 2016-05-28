@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import de.tuberlin.aec.communication.PutResponse;
 import fi.iki.elonen.NanoHTTPD;
 
 /**
@@ -48,10 +49,14 @@ public class RestServer extends NanoHTTPD {
     	
 		String key = uriParts[2];
 		String value = uriParts[3];
-		// TODO status
-		this.api.put(key, value);
 
-		String json = "{status: 'TODO'}";
+		PutResponse response = this.api.put(key, value);
+		String json;
+		if(response.isSuccess()) {
+			json = "{key: '" + key + "', status: 'success'}";
+		} else {
+			json = "{key: '" + key + "', status: 'error', errorMsg: '" + response.getErrorMessage() + "'}";
+		}
         return newFixedLengthResponse(json);
     }
     private Response serveDelete(IHTTPSession session) {
