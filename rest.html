@@ -1,0 +1,112 @@
+<html>
+	<head>
+	<title>Disto Interface</title>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+	<style>
+	body {
+		font-family: 'Montserrat', sans-serif;
+		text-align: center;
+	}
+	.buttons {
+		margin: 20px 0 40px 0;
+	}
+	.buttons div {
+		display: inline;
+		margin: 10px 10px;
+		padding: 3px 6px;
+		background-color: #DE0505;
+		color: white;
+		border-radius: 3px;
+		color: white;
+		cursor: pointer;
+	}
+	.logo {
+		background-color: #0035AB;
+		color: white;
+		border-radius: 10px;
+		margin: 20px auto 40px auto;
+		padding: 3px 6px;
+		font-size: 49px;
+		width: 200px;
+	}
+	.logo span {
+		font-size: 12px;
+		display: block;
+		padding: 0 0 9px 0;
+	}
+	.input #key {
+		margin-right: 20px;
+	}
+	.input input {
+		margin-left: 5px;
+		width: 100px;
+	}
+	#response {
+		width: 500px;
+		height: 160px;
+		overflow: auto;
+		border: 2px solid #C5CFEA;
+		margin: 0 auto;
+		font-family: Courier;
+		text-align: left;
+		padding: 5px 5px;
+	}
+	#response div {
+		text-align: center;
+		font-size: 50px;
+		padding-top: 40px;
+		color: #E4E4E4;
+	}
+	</style>
+	</head>
+	<body>
+		<div class="logo">Disto <span>Distributed Key-Value Storage</span></div>
+		<div class="input">
+			<span>KEY</span>
+			<input type="input" id="key">
+			<span>VALUE</span>
+			<input type="input" id="value">
+		</div>
+		<div class="buttons">
+			<div>PUT</div>
+			<div>GET</div>
+			<div>DELETE</div>
+		</div>
+		<div id="response">
+			<div>Response</div>
+		</div>
+		<!--  
+		Available functions:
+		<ul>
+			<li>/put/key/value<br><i>Stores the given key-value pair.</i></li>
+			<li>/get/key<br><i>Returns the value with the given key.</i></li>
+			<li>/delete/key<br><i>Deletes the value with the given key.</i></li>
+		</ul>
+		-->
+		<script>
+			$(function() {
+				$('.buttons div').click(function() {
+					var button = $(this);
+					var buttonFunction = button.text();
+					var key = $('#key').val();
+					var value = $('#value').val();
+					var restUrl;
+					if(buttonFunction == "PUT") {
+						restUrl = "/put/" + key + "/" + value;
+					} else if(buttonFunction == "GET") {
+						restUrl = "/get/" + key;
+					} else if(buttonFunction == "DELETE") {
+						restUrl = "/delete/" + key;
+					}
+					
+					$.ajax({
+						  url: restUrl,
+					}).done(function( data ) {
+							$('#response').html(data);
+						  });
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -1,6 +1,9 @@
 package de.tuberlin.aec;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import fi.iki.elonen.NanoHTTPD;
 
 /**
@@ -74,22 +77,14 @@ public class RestServer extends NanoHTTPD {
         return newFixedLengthResponse(json);
     }
     private Response serveHelp(IHTTPSession session) {
-        String msg = "<html><body><h1>Key-Value Store: REST API</h1>\n";
-        msg += "Available functions:";
-        msg += "<ul>";
-        msg += "<li>/put/key/value<br><i>Stores the given key-value pair.</i></li>";
-        msg += "<li>/get/key<br><i>Returns the value with the given key.</i></li>";
-        msg += "<li>/delete/key<br><i>Deletes the value with the given key.</i></li>";
-        msg += "</ul>";
-        return newFixedLengthResponse(msg + "</body></html>\n");
-    	/*
-        Map<String, String> parms = session.getParms();
-        if (parms.get("username") == null) {
-            msg += "<form action='?' method='get'>\n  <p>Your name: <input type='text' name='username'></p>\n" + "</form>\n";
-        } else {
-            msg += "<p>Hello, " + parms.get("username") + "!</p>";
-        }
-        */
+    	String file;
+		try {
+			file = new String(Files.readAllBytes(Paths.get("rest.html")));
+		} catch (IOException e) {
+			file = "An IOException occurred.";
+			e.printStackTrace();
+		}
+        return newFixedLengthResponse(file);
     }
     
     private Response malformedRequest(IHTTPSession session) {
