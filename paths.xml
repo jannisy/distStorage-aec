@@ -13,46 +13,46 @@
 		<link src="nodeC" type="async" target="nodeA"/>
 		<link src="nodeC" type="async" target="nodeB"/>
 	</path>
-	<path start="geoAnodeA">
-		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
-		<link src="geoAnodeA" type="sync" target="geoBnodeA"/>
-		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
-		<link src="geoAnodeA" type="sync" target="geoCnodeA"/>
-		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	<path start="geoAnodeA:5000">
+		<link src="geoAnodeA:5000" type="sync" target="geoAnodeB:5000"/>
+		<link src="geoAnodeA:5000" type="sync" target="geoBnodeA:5000"/>
+		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
+		<link src="geoAnodeA:5000" type="sync" target="geoCnodeA:5000"/>
+		<link src="geoCnodeA:5000" type="sync" target="geoCnodeB:5000"/>
 	</path>
-	<path start="geoAnodeB">
-		<link src="geoAnodeB" type="sync" target="geoAnodeA"/>
-		<link src="geoAnodeB" type="sync" target="geoBnodeA"/>
-		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
-		<link src="geoAnodeB" type="sync" target="geoCnodeA"/>
-		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	<path start="geoAnodeB:5000">
+		<link src="geoAnodeB:5000" type="sync" target="geoAnodeA:5000"/>
+		<link src="geoAnodeB:5000" type="sync" target="geoBnodeA:5000"/>
+		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
+		<link src="geoAnodeB:5000" type="sync" target="geoCnodeA:5000"/>
+		<link src="geoCnodeA:5000" type="sync" target="geoCnodeB:5000"/>
 	</path>
-	<path start="geoBnodeA">
-		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
-		<link src="geoBnodeA" type="sync" target="geoAnodeA"/>
-		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
-		<link src="geoBnodeA" type="sync" target="geoCnodeA"/>
-		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	<path start="geoBnodeA:5000">
+		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
+		<link src="geoBnodeA:5000" type="sync" target="geoAnodeA:5000"/>
+		<link src="geoAnodeA:5000" type="sync" target="geoAnodeB:5000"/>
+		<link src="geoBnodeA:5000" type="sync" target="geoCnodeA:5000"/>
+		<link src="geoCnodeA:5000" type="sync" target="geoCnodeB:5000"/>
 	</path>
-	<path start="geoBnodeB">
-		<link src="geoBnodeB" type="sync" target="geoBnodeA"/>
-		<link src="geoBnodeB" type="sync" target="geoAnodeA"/>
-		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
-		<link src="geoBnodeB" type="sync" target="geoCnodeA"/>
-		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	<path start="geoBnodeB:5000">
+		<link src="geoBnodeB:5000" type="sync" target="geoBnodeA:5000"/>
+		<link src="geoBnodeB:5000" type="sync" target="geoAnodeA:5000"/>
+		<link src="geoAnodeA:5000" type="sync" target="geoAnodeB:5000"/>
+		<link src="geoBnodeB:5000" type="sync" target="geoCnodeA:5000"/>
+		<link src="geoCnodeA:5000" type="sync" target="geoCnodeB:5000"/>
 	</path>
-	<path start="geoCnodeA">
-		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
-		<link src="geoCnodeA" type="sync" target="geoAnodeA"/>
-		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
-		<link src="geoCnodeA" type="sync" target="geoBnodeA"/>
-		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+	<path start="geoCnodeA:5000">
+		<link src="geoCnodeA:5000" type="sync" target="geoCnodeB:5000"/>
+		<link src="geoCnodeA:5000" type="sync" target="geoAnodeA:5000"/>
+		<link src="geoAnodeA:5000" type="sync" target="geoAnodeB:5000"/>
+		<link src="geoCnodeA:5000" type="sync" target="geoBnodeA:5000"/>
+		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
 	</path>
-	<path start="geoCnodeB">
-		<link src="geoCnodeB" type="sync" target="geoCnodeA"/>
-		<link src="geoCnodeB" type="sync" target="geoAnodeA"/>
-		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
-		<link src="geoCnodeB" type="sync" target="geoBnodeA"/>
-		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+	<path start="geoCnodeB:5000">
+		<link src="geoCnodeB:5000" type="sync" target="geoCnodeA:5000"/>
+		<link src="geoCnodeB:5000" type="sync" target="geoAnodeA:5000"/>
+		<link src="geoAnodeA:5000" type="sync" target="geoAnodeB:5000"/>
+		<link src="geoCnodeB:5000" type="sync" target="geoBnodeA:5000"/>
+		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
 	</path>
 </replicationpaths>
