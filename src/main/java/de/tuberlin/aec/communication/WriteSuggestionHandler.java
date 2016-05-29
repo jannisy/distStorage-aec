@@ -48,13 +48,14 @@ public class WriteSuggestionHandler implements IRequestHandler {
 		} else {
 
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, nodeConfig.getHostAndPort());
+			List<String> syncNeighbours = pathConfig.getSyncNeighbours(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
 			final PendingRequest pendingRequest;
 			if(!syncPaths.isEmpty()) {
 				pendingRequest = new PendingRequest(startNode, key, value, msg.getExpectResponse());
 				pendingRequest.setResponseNode(originator);
-				pendingRequest.addNodesToNecessaryResponses(allNeighbours);
+				pendingRequest.addNodesToNecessaryResponses(syncNeighbours);
 				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
 			} else {

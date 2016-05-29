@@ -164,6 +164,23 @@ public class PathConfiguration {
 		return getNodePathLinksByType(startNode, node, LINK_TYPE_ASYNC);
 	}
 
+	public List<String> getSyncNeighbours(String startNode, String node) {
+		List<String> neighbours = new ArrayList<String>();
+		List<PathLink> links = getSyncNodePathLinks(startNode, node);
+		for(PathLink link : links) {
+			neighbours.add(link.getTarget());
+		}
+		return neighbours;
+	}
+	public List<String> getAsyncNeighbours(String startNode, String node) {
+		List<String> neighbours = new ArrayList<String>();
+		List<PathLink> links = getAsyncNodePathLinks(startNode, node);
+		for(PathLink link : links) {
+			neighbours.add(link.getTarget());
+		}
+		return neighbours;
+	}
+
 	private List<PathLink> getNodePathLinksByType(String startNode, String node, String type) {
 
 		List<PathLink> links = new ArrayList<PathLink>();

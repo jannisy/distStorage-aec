@@ -47,6 +47,7 @@ public class DistoNodeApi {
 			String startNode = nodeConfig.getHostAndPort();
 
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, startNode);
+			List<String> syncNeighbours = pathConfig.getSyncNeighbours(startNode, startNode);
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, startNode);
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, startNode);
 			final PendingRequest pendingRequest;
@@ -56,7 +57,7 @@ public class DistoNodeApi {
 					System.out.println("Internal Error: There is a pending request on this key.");
 				}
 				pendingRequest = new PendingRequest(startNode, key, value, expectResponse);
-				pendingRequest.addNodesToNecessaryResponses(allNeighbours);
+				pendingRequest.addNodesToNecessaryResponses(syncNeighbours);
 				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
 			} else {

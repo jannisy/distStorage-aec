@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.tuberlin.aec.communication.PutResponse;
 import de.tuberlin.aec.util.NetworkConfiguration;
+import de.tuberlin.aec.util.PathLink;
 
 /**
  * A pending request represents a PUT request which is not yet complete.
@@ -63,7 +64,7 @@ public class PendingRequest {
 			this.addNodeToNecessaryResponses(address);
 		}
 	}
-	
+
 	/**
 	 * Removes a node from necessary responses list.
 	 * The necessary responses list is a list with host names from all
