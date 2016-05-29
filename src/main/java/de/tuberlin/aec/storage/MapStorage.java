@@ -12,21 +12,35 @@ import de.tuberlin.aec.PendingRequest;
  */
 public class MapStorage implements LocalStorage {
 
-	Map<String, String> map;
+	Map<String, Value> map;
 	Map<String, Boolean> locked;
 	Map<String, PendingRequest> pendingRequests;
 	
 	public MapStorage() {
-		map = new HashMap<String, String>();
+		map = new HashMap<String, Value>();
 		locked = new HashMap<String, Boolean>();
 		pendingRequests = new HashMap<String, PendingRequest>();
 	}
 	public String get(String key) {
-		return map.get(key);
+		Value val = map.get(key);
+		if(val != null) {
+			return val.getValue();
+		} else {
+			return null;
+		}
+	}
+	public long getTimestamp(String key) {
+		Value val = map.get(key);
+		if(val != null) {
+			return val.getTimestamp();
+		} else {
+			return -1;
+		}
 	}
 
 	public void put(String key, String value) {
-		map.put(key, value);
+		Value v = new Value(value, System.currentTimeMillis());
+		map.put(key, v);
 		
 	}
 

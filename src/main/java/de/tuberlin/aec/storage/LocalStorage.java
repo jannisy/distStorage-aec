@@ -15,6 +15,13 @@ public interface LocalStorage {
 	 * @return the value with the given key
 	 */
 	public String get(String key);
+
+	/**
+	 * returns the time stamp of the value with the given key
+	 * @param key the key
+	 * @returns the time stamp of the value with the given key
+	 */
+	public long getTimestamp(String key);
 	
 	/**
 	 * puts the given key value pair

@@ -83,8 +83,13 @@ public class RestServer extends NanoHTTPD {
     	}
 		String key = uriParts[2];
 		String value = this.api.get(key);
+		long timestamp = this.api.getTimestamp(key);
 
-		String json = "{\n\tkey: '" + key + "',\n\tvalue: '" + value + "'\n}";
+		String json = "{\n\tkey: '" + key + "',\n\tvalue: '" + value + "'";
+		if(timestamp > 0) {
+			json += ",\n\ttimestamp: '" + timestamp + "'";
+		}
+		json += "\n}";
         return newFixedLengthResponse(json);
     }
     private Response serveHelp(IHTTPSession session) {

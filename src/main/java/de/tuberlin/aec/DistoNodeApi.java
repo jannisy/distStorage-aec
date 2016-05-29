@@ -121,7 +121,7 @@ public class DistoNodeApi {
 			}
 		}
 	}
-	
+
 	public String get(String key) {
 		String value = localStorage.get(key);
 		if(value == null) {
@@ -129,6 +129,9 @@ public class DistoNodeApi {
 		} else {
 			return value;
 		}
+	}
+	public long getTimestamp(String key) {
+		return localStorage.getTimestamp(key);
 	}
 	
 	public void delete(String key) {
