@@ -55,12 +55,18 @@ public class RestServer extends NanoHTTPD {
 		String key = uriParts[2];
 		String value = uriParts[3];
 
+		long startTime = System.currentTimeMillis();
+		
 		PutResponse response = this.api.put(key, value);
+		
+		long stopTime = System.currentTimeMillis();
+		long executionTime = stopTime - startTime;
+		
 		String json;
 		if(response.isSuccess()) {
-			json = "{key: '" + key + "', status: 'success'}";
+			json = "{key: '" + key + "', status: 'success', 'executionTime': " + executionTime + "}";
 		} else {
-			json = "{key: '" + key + "', status: 'error', errorMsg: '" + response.getErrorMessage() + "'}";
+			json = "{key: '" + key + "', status: 'error', errorMsg: '" + response.getErrorMessage() + "', 'executionTime': " + executionTime + "}";
 		}
         return newFixedLengthResponse(json);
     }
