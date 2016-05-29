@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.tub.ise.hermes.Receiver;
 import de.tub.ise.hermes.RequestHandlerRegistry;
+import de.tuberlin.aec.communication.DeleteRequestHandler;
 import de.tuberlin.aec.communication.MessageSender;
 import de.tuberlin.aec.communication.WriteCommitHandler;
 import de.tuberlin.aec.communication.WriteSuggestionHandler;
@@ -28,6 +29,7 @@ public class DistoNode {
 	public static final String HANDLER_SYNC_WRITE_COMMIT = "SyncWriteCommit";
 	public static final String HANDLER_SYNC_WRITE_SUGGESTION = "SyncWriteSuggestion";
 	public static final String HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE = "SyncWriteSuggestionResp";
+	public static final String HANDLER_DELETE_REQUEST = "DeleteRequest";
 
 	/**
 	 * the path configuration
@@ -67,7 +69,7 @@ public class DistoNode {
 		
 		msgSender = new MessageSender(nodeConfig.getHostAndPort());
 		localStorage = new MapStorage();
-		api = new DistoNodeApi(localStorage, msgSender, nodeConfig, pathConfig);
+		api = new DistoNodeApi(localStorage, msgSender, nodeConfig, pathConfig, networkConfig);
 		
 	}
 	
@@ -96,11 +98,13 @@ public class DistoNode {
 		WriteSuggestionHandler syncWriteSuggestionHandler = new WriteSuggestionHandler(localStorage, pathConfig, nodeConfig, msgSender);
 		WriteSuggestionResponseHandler syncWriteSuggestionResponseHandler = new WriteSuggestionResponseHandler(localStorage, pathConfig, nodeConfig, networkConfig, msgSender);
 		WriteCommitHandler syncWriteCommitHandler = new WriteCommitHandler(localStorage, pathConfig, nodeConfig, msgSender);
+		DeleteRequestHandler deleteRequestHandler = new DeleteRequestHandler(localStorage);
 		
 		RequestHandlerRegistry reg = RequestHandlerRegistry.getInstance();
 		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_COMMIT, syncWriteCommitHandler);
 		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION, syncWriteSuggestionHandler);
 		reg.registerHandler(DistoNode.HANDLER_SYNC_WRITE_SUGGESTION_RESPONSE, syncWriteSuggestionResponseHandler);
+		reg.registerHandler(DistoNode.HANDLER_DELETE_REQUEST, deleteRequestHandler);
 		
 		try {
 			Receiver receiver = new Receiver(nodeConfig.getPort());

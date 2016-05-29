@@ -25,14 +25,17 @@ public class DistoNodeApi {
 	private MessageSender msgSender;
 	private NodeConfiguration nodeConfig;
 	private PathConfiguration pathConfig;
+	private NetworkConfiguration networkConfig;
 	
 	public static int REQUEST_TIMEOUT_MS = 15000;
 
-	public DistoNodeApi(LocalStorage localStorage, MessageSender msgSender, NodeConfiguration nodeConfig, PathConfiguration pathConfig) {
+	public DistoNodeApi(LocalStorage localStorage, MessageSender msgSender, 
+			NodeConfiguration nodeConfig, PathConfiguration pathConfig, NetworkConfiguration networkConfig) {
 		this.localStorage = localStorage;
 		this.msgSender = msgSender;
 		this.nodeConfig = nodeConfig;
 		this.pathConfig = pathConfig;
+		this.networkConfig = networkConfig;
 	}
 
 	public PutResponse put(String key, String value) {
@@ -129,7 +132,15 @@ public class DistoNodeApi {
 	}
 	
 	public void delete(String key) {
-		
+		localStorage.unlock(key);
+		localStorage.delete(key);
+		for(InetSocketAddress node : networkConfig.getAllNodes()) {
+			if(node.equals(nodeConfig.getSocket())) {
+				// Don't send to this node
+				continue;
+			}
+			msgSender.sendDeleteRequest(node.getHostName(), node.getPort(), key);
+		}
 	}
 	
 }

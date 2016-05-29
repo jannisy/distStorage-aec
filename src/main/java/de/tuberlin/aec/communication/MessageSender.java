@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Sender;
+import de.tuberlin.aec.message.DeleteRequestMessage;
 import de.tuberlin.aec.message.WriteCommitMessage;
 import de.tuberlin.aec.message.WriteSuggestionMessage;
 import de.tuberlin.aec.message.WriteSuggestionResponseMessage;
@@ -60,4 +61,10 @@ public class MessageSender {
         WriteSuggestionResponseMessage msg = new WriteSuggestionResponseMessage(key, ack, sender);
         sendMessage(host, port, msg);
     }
+	public void sendDeleteRequest(String host, int port, String key) {
+        System.out.println("Send DeleteReqeust host=" + host + ":" + port + ", key=" + key);
+        DeleteRequestMessage msg = new DeleteRequestMessage(key, sender);
+        sendMessage(host, port, msg);
+		
+	}
 }
