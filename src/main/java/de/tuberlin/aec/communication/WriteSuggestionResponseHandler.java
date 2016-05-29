@@ -133,12 +133,12 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 
 		PutResponse response = new PutResponse(true);
 		pendingRequest.setResponse(response);
-		sendCommitMessages(key, pendingRequest.getValue());
 		synchronized(pendingRequest) {
 			pendingRequest.setFinished(true);
 			System.out.println("Notify (commit)");
 			pendingRequest.notifyAll();
 		}
+		sendCommitMessages(key, pendingRequest.getValue());
 	}
 	
 	private void sendCommitMessages(String key, String value) {
