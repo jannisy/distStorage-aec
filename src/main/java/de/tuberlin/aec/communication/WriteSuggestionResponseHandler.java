@@ -98,8 +98,8 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 		}
 		synchronized(pendingRequest) {
 			pendingRequest.setFinished(true);
-			pendingRequest.notifyAll();
 			System.out.println("Notify");
+			pendingRequest.notifyAll();
 		}
 	}
 

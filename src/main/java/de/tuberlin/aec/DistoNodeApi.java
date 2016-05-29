@@ -73,6 +73,7 @@ public class DistoNodeApi {
 					synchronized(pendingRequest) {
 					    try {
 					    	pendingRequest.wait();
+					    	System.out.println("PendingRequest: notified");
 					    } catch (InterruptedException e) {
 					        // Happens if someone interrupts the thread.
 					    }

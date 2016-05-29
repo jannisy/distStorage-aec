@@ -17,11 +17,12 @@ public class RestServer extends NanoHTTPD {
 
 	/** the node api */
     private DistoNodeApi api;
+    private static int NANOHTTPD_SOCKET_READ_TIMEOUT = 20000;
     
 	public RestServer(int port, DistoNodeApi api) throws IOException {
         super(port);
         this.api = api;
-        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+        start(NANOHTTPD_SOCKET_READ_TIMEOUT, false);
         System.out.println("\nREST API server running: http://localhost:" + port + "/ \n");
     }
 
