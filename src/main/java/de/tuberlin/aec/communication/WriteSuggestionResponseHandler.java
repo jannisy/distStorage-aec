@@ -114,7 +114,7 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 		pendingRequest.setResponse(response);
 		synchronized(pendingRequest) {
 			pendingRequest.setFinished(true);
-			System.out.println("Notify");
+			System.out.println("Notify (abort)");
 			pendingRequest.notifyAll();
 		}
 		
@@ -136,7 +136,7 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 		sendCommitMessages(key, pendingRequest.getValue());
 		synchronized(pendingRequest) {
 			pendingRequest.setFinished(true);
-			System.out.println("Notify");
+			System.out.println("Notify (commit)");
 			pendingRequest.notifyAll();
 		}
 	}

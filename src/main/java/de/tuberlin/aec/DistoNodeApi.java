@@ -90,6 +90,15 @@ public class DistoNodeApi {
 						            	  System.out.println("Timeout for Put Request key=" + key);
 						            	  localStorage.unlock(key);
 						            	  localStorage.removePendingRequest(key);
+
+						            	  synchronized(pendingRequest) {
+						            		  pendingRequest.setFinished(true);
+						            		  PutResponse response = new PutResponse(false);
+						            		  response.setErrorMessage("Timeout!");
+						            		  pendingRequest.setResponse(response);
+						            		  System.out.println("Notify (timeout)");
+						            		  pendingRequest.notifyAll();
+						            	  }
 					            	  }
 					              }
 					         }, REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS);
