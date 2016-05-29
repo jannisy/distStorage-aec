@@ -14,18 +14,18 @@ public class DistStorage {
     	
     	args = addStandardValuesToArguments(args);
 
-        int hermesPort = new Integer(args[0]);
-        System.out.println("Port set to " + hermesPort);
-
-        int serverPort = new Integer(args[1]);
-        System.out.println("Server Port set to " + serverPort);
-        
+        String pathsConfig = args[0];
+        String serverlist = args[1];
         String host = args[2];
+        int hermesPort = new Integer(args[3]);
+        int restPort = new Integer(args[4]);
+        
+        System.out.println("Disto. pathsConfig=" + pathsConfig + ", serverlist=" + serverlist + ",host=" + host + ", port=" + hermesPort + ", restPort=" + restPort);
         
         // TODO 
-    	NodeConfiguration nodeConfig = new NodeConfiguration(host, hermesPort, serverPort);
-    	PathConfiguration pathConfig = new PathConfiguration("config-sample.xml");
-    	NetworkConfiguration  netConfig = new NetworkConfiguration("serverlist");
+    	NodeConfiguration nodeConfig = new NodeConfiguration(host, hermesPort, restPort);
+    	PathConfiguration pathConfig = new PathConfiguration(pathsConfig);
+    	NetworkConfiguration  netConfig = new NetworkConfiguration(serverlist);
     	
     	DistoNode node = new DistoNode(nodeConfig, pathConfig, netConfig);
     	node.start();
@@ -33,25 +33,24 @@ public class DistStorage {
     }
 
 	private static String[] addStandardValuesToArguments(String[] args) {
-    	if(args.length == 0) {
-    		args = new String[3];
-    		args[0] = "5000";
-    		args[1] = "8080";
-			args[2] = "localhost";
-    	} else if(args.length == 1) {
-    		String temp = args[0];
-    		args = new String[3];
-    		args[0] = temp;
-    		args[1] = "8080";
-			args[2] = "localhost";
-		} else if(args.length == 2) {
-			String tempPort = args[0];
-			String tempRestPort = args[1];
-			args = new String[3];
-			args[0] = tempPort;
-			args[1] = tempRestPort;
-			args[2] = "localhost";
+		String[] newArgs = new String[5];
+		for(int i = 0; i < newArgs.length; i++) {
+			if(i < args.length && !args[i].equals("-") && !args[i].equals("default")) {
+				newArgs[i] = args[i];
+			} else {
+				if(i == 0) {
+					newArgs[i] = "paths.xml";
+				} else if(i == 1) {
+					newArgs[i] = "serverlist";
+				} else if(i == 2) {
+					newArgs[i] = "localhost";
+				} else if(i == 3) {
+					newArgs[i] = "5000";
+				} else if(i == 4) {
+					newArgs[i] = "8080";
+				}
+			}
 		}
-    	return args;
+    	return newArgs;
 	}
 }

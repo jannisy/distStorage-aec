@@ -34,6 +34,10 @@ public class RestServer extends NanoHTTPD {
     		return serveGet(session);
     	} else if(uri.startsWith("/delete")) {
     		return serveDelete(session);
+    	} else if(uri.startsWith("/paths")) {
+    		return servePaths(session);
+    	} else if(uri.startsWith("/servers")) {
+    		return serveServerList(session);
         } else {
         	return serveHelp(session);
         }
@@ -85,6 +89,26 @@ public class RestServer extends NanoHTTPD {
     	String file;
 		try {
 			file = new String(Files.readAllBytes(Paths.get("rest.html")));
+		} catch (IOException e) {
+			file = "An IOException occurred.";
+			e.printStackTrace();
+		}
+        return newFixedLengthResponse(file);
+    }
+    private Response servePaths(IHTTPSession session) {
+    	String file;
+		try {
+			file = new String(Files.readAllBytes(Paths.get("paths.xml")));
+		} catch (IOException e) {
+			file = "An IOException occurred.";
+			e.printStackTrace();
+		}
+        return newFixedLengthResponse(file);
+    }
+    private Response serveServerList(IHTTPSession session) {
+    	String file;
+		try {
+			file = new String(Files.readAllBytes(Paths.get("serverlist")));
 		} catch (IOException e) {
 			file = "An IOException occurred.";
 			e.printStackTrace();

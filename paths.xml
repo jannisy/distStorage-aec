@@ -1,0 +1,58 @@
+<replicationpaths>
+	<path start="nodeA">
+		<link src="nodeA" type="sync" target="nodeB"/>
+		<link src="nodeB" type="async" target="nodeC"/>
+	</path>
+	<path start="nodeB">
+		<link src="nodeB" type="quorum" qsize="1">
+			<qparticipant name="nodeA"/>
+			<qparticipant name="nodeC"/>
+		</link>		
+	</path>
+	<path start="nodeC">
+		<link src="nodeC" type="async" target="nodeA"/>
+		<link src="nodeC" type="async" target="nodeB"/>
+	</path>
+	<path start="geoAnodeA">
+		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
+		<link src="geoAnodeA" type="sync" target="geoBnodeA"/>
+		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+		<link src="geoAnodeA" type="sync" target="geoCnodeA"/>
+		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	</path>
+	<path start="geoAnodeB">
+		<link src="geoAnodeB" type="sync" target="geoAnodeA"/>
+		<link src="geoAnodeB" type="sync" target="geoBnodeA"/>
+		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+		<link src="geoAnodeB" type="sync" target="geoCnodeA"/>
+		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	</path>
+	<path start="geoBnodeA">
+		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+		<link src="geoBnodeA" type="sync" target="geoAnodeA"/>
+		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
+		<link src="geoBnodeA" type="sync" target="geoCnodeA"/>
+		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	</path>
+	<path start="geoBnodeB">
+		<link src="geoBnodeB" type="sync" target="geoBnodeA"/>
+		<link src="geoBnodeB" type="sync" target="geoAnodeA"/>
+		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
+		<link src="geoBnodeB" type="sync" target="geoCnodeA"/>
+		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+	</path>
+	<path start="geoCnodeA">
+		<link src="geoCnodeA" type="sync" target="geoCnodeB"/>
+		<link src="geoCnodeA" type="sync" target="geoAnodeA"/>
+		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
+		<link src="geoCnodeA" type="sync" target="geoBnodeA"/>
+		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+	</path>
+	<path start="geoCnodeB">
+		<link src="geoCnodeB" type="sync" target="geoCnodeA"/>
+		<link src="geoCnodeB" type="sync" target="geoAnodeA"/>
+		<link src="geoAnodeA" type="sync" target="geoAnodeB"/>
+		<link src="geoCnodeB" type="sync" target="geoBnodeA"/>
+		<link src="geoBnodeA" type="sync" target="geoBnodeB"/>
+	</path>
+</replicationpaths>

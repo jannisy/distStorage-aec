@@ -2,6 +2,9 @@ package de.tuberlin.aec.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,9 +55,18 @@ public class PathConfiguration {
 		DocumentBuilder builder;
 		try {
 			builder = factory.newDocumentBuilder();
-			File xmlFile = new File(this.configFile);
+			Document doc;
+			if(configFile.startsWith("http://")) {
+				
+				URL url = new URL(configFile); 
+			    InputStream in = url.openStream(); 
+				doc = builder.parse(in);
+			} else {
 
-			Document doc = builder.parse(xmlFile);
+				File xmlFile = new File(this.configFile);
+				doc = builder.parse(xmlFile);
+			}
+
 			doc.getDocumentElement().normalize();
 			
 			NodeList paths = doc.getDocumentElement().getChildNodes();
