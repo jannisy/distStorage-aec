@@ -72,7 +72,8 @@ public class RestServer extends NanoHTTPD {
     	}
 		String key = uriParts[2];
 		this.api.delete(key);
-        return newFixedLengthResponse("TODO");
+		String json = "{key: '" + key + "', status: 'success'}";
+        return newFixedLengthResponse(json);
     }
     private Response serveGet(IHTTPSession session) {
     	String uri = session.getUri();
