@@ -32,7 +32,7 @@ public class MessageSender {
 		    exec.schedule(new Runnable() {
 		              public void run() {
 		                  Sender sender = new Sender(host, port);
-		                  sender.sendMessage(request, 2000);
+		                  sender.sendMessageAsync (request, new AsyncCallback());
 		              }
 		         }, MSG_DELAY, TimeUnit.MILLISECONDS);
     	} else {
