@@ -50,7 +50,7 @@ public class WriteSuggestionHandler implements IRequestHandler {
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
-			PendingRequest pendingRequest = null;
+			final PendingRequest pendingRequest;
 			if(!syncPaths.isEmpty()) {
 				pendingRequest = new PendingRequest(startNode, key, value, msg.getExpectResponse());
 				pendingRequest.setResponseNode(originator);
@@ -58,6 +58,7 @@ public class WriteSuggestionHandler implements IRequestHandler {
 				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
 			} else {
+				pendingRequest = null;
 				// no neighbours or only async
 				// -> reply with ACK immediately
 				boolean ack = true;
@@ -83,15 +84,17 @@ public class WriteSuggestionHandler implements IRequestHandler {
 				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
 			}
 
-			if(!syncPaths.isEmpty() && !pendingRequest.isFinished()) {
+			if(!syncPaths.isEmpty()) {
 
 			    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
 			    // abort after timeout!
 			    exec.schedule(new Runnable() {
 			              public void run() {
-			            	  System.out.println("Timeout for Put Request key=" + key);
-			            	  localStorage.unlock(key);
-			            	  localStorage.removePendingRequest(key);
+			            	  if(!pendingRequest.isFinished()) {
+				            	  System.out.println("Timeout for Put Request key=" + key);
+				            	  localStorage.unlock(key);
+				            	  localStorage.removePendingRequest(key);
+			            	  }
 			              }
 			         }, DistoNodeApi.REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 			}

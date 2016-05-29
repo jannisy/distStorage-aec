@@ -65,6 +65,7 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 					msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
 							pendingRequest.getResponseNode().getPort(), key, responseAck);
 				}
+				pendingRequest.setFinished(true);
 			} else {
 				System.out.println("  Awaiting further response messages.");
 			}
@@ -75,6 +76,7 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 				msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
 						pendingRequest.getResponseNode().getPort(), key, responseAck);
 			}
+			pendingRequest.setFinished(true);
 			localStorage.unlock(key);
 			localStorage.removePendingRequest(key);
 		}

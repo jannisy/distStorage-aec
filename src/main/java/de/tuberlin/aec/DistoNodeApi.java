@@ -49,7 +49,7 @@ public class DistoNodeApi {
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, startNode);
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, startNode);
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, startNode);
-			PendingRequest pendingRequest = null;
+			final PendingRequest pendingRequest;
 			if(!syncPaths.isEmpty()) {
 				boolean expectResponse = false; // This is the starting node - no response required.
 				if(localStorage.getPendingRequest(key) != null) {
@@ -60,6 +60,7 @@ public class DistoNodeApi {
 				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
 			} else {
+				pendingRequest = null;
 				// no neighbours or only async
 				// -> commit immediately
 				localStorage.put(key, value);
@@ -84,9 +85,12 @@ public class DistoNodeApi {
 				
 					    exec.schedule(new Runnable() {
 					              public void run() {
-					            	  System.out.println("Timeout for Put Request key=" + key);
-					            	  localStorage.unlock(key);
-					            	  localStorage.removePendingRequest(key);
+
+					            	  if(!pendingRequest.isFinished()) {
+						            	  System.out.println("Timeout for Put Request key=" + key);
+						            	  localStorage.unlock(key);
+						            	  localStorage.removePendingRequest(key);
+					            	  }
 					              }
 					         }, REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 					    
