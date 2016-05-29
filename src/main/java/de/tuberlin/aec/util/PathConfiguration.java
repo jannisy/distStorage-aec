@@ -137,7 +137,7 @@ public class PathConfiguration {
 
 			for (int k = 0; k < qParticipants.getLength(); k++) {
 				Node qParticipant = qParticipants.item(k);
-				if (linkElement.getNodeType() == Node.ELEMENT_NODE) {
+				if (qParticipant.getNodeType() == Node.ELEMENT_NODE) {
 					String target = ((Element) qParticipant).getAttribute("name");
 					PathLink pathLink = new PathLink(PathConfiguration.LINK_TYPE_QUORUM, src, target);
 					list.add(pathLink);
@@ -200,7 +200,7 @@ public class PathConfiguration {
 //		config.get()
 //		int target = linkElement.getAttribute("qsize");
 //		return qsize;
-		return 1;
+		return 4;
 	}
 
 	private List<PathLink> getNodePathLinksByType(String startNode, String node, String type) {
