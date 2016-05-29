@@ -2,10 +2,13 @@ package de.tuberlin.aec.communication;
 
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import de.tub.ise.hermes.IRequestHandler;
 import de.tub.ise.hermes.Request;
 import de.tub.ise.hermes.Response;
+import de.tuberlin.aec.DistoNodeApi;
 import de.tuberlin.aec.PendingRequest;
 import de.tuberlin.aec.message.WriteSuggestionMessage;
 import de.tuberlin.aec.storage.LocalStorage;
@@ -47,9 +50,9 @@ public class WriteSuggestionHandler implements IRequestHandler {
 			List<String> allNeighbours = pathConfig.getNodeNeighbours(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, nodeConfig.getHostAndPort());
-			
+			PendingRequest pendingRequest = null;
 			if(!syncPaths.isEmpty()) {
-				PendingRequest pendingRequest = new PendingRequest(startNode, key, value, msg.getExpectResponse());
+				pendingRequest = new PendingRequest(startNode, key, value, msg.getExpectResponse());
 				pendingRequest.setResponseNode(originator);
 				pendingRequest.addNodesToNecessaryResponses(allNeighbours);
 				localStorage.setPendingRequest(key, pendingRequest);
@@ -78,6 +81,19 @@ public class WriteSuggestionHandler implements IRequestHandler {
 				InetSocketAddress address = NetworkConfiguration.createAddressFromString(asyncPath.getTarget());
 				boolean expectResponse = false;
 				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
+			}
+
+			if(!syncPaths.isEmpty() && !pendingRequest.isFinished()) {
+
+			    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+			    // abort after timeout!
+			    exec.schedule(new Runnable() {
+			              public void run() {
+			            	  System.out.println("Timeout for Put Request key=" + key);
+			            	  localStorage.unlock(key);
+			            	  localStorage.removePendingRequest(key);
+			              }
+			         }, DistoNodeApi.REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 			}
 		}
 		Response response = new Response("", true, request, "");
