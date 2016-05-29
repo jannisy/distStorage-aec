@@ -49,10 +49,12 @@
 		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
 	</path>
 	<path start="geoCnodeB:5000">
-		<link src="geoCnodeB:5000" type="sync" target="geoCnodeA:5000"/>
-		<link src="geoCnodeB:5000" type="sync" target="geoAnodeA:5000"/>
-		<link src="geoAnodeA:5000" type="sync" target="geoAnodeB:5000"/>
-		<link src="geoCnodeB:5000" type="sync" target="geoBnodeA:5000"/>
-		<link src="geoBnodeA:5000" type="sync" target="geoBnodeB:5000"/>
+		<link src="geoCnodeB:5000" type="quorum" qsize="3">
+			<qparticipant name="geoAnodeA:5000"/>
+			<qparticipant name="geoAnodeB:5000"/>
+			<qparticipant name="geoBnodeA:5000"/>
+			<qparticipant name="geoBnodeB:5000"/>
+			<qparticipant name="geoCnodeA:5000"/>
+		</link>
 	</path>
 </replicationpaths>

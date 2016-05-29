@@ -130,11 +130,19 @@ public class PathConfiguration {
 			String target = linkElement.getAttribute("target");
 			PathLink pathLink = new PathLink(PathConfiguration.LINK_TYPE_ASYNC, src, target);
 			list.add(pathLink);
-		
 
 		} else if(type.equals(PathConfiguration.LINK_TYPE_QUORUM)) {
-			// TODO
-			
+			// TODO - done
+			NodeList qParticipants = linkElement.getChildNodes();
+
+			for (int k = 0; k < qParticipants.getLength(); k++) {
+				Node qParticipant = qParticipants.item(k);
+				if (linkElement.getNodeType() == Node.ELEMENT_NODE) {
+					String target = ((Element) qParticipant).getAttribute("name");
+					PathLink pathLink = new PathLink(PathConfiguration.LINK_TYPE_QUORUM, src, target);
+					list.add(pathLink);
+				}
+			}
 		} else {
 			// TODO config file error
 	        System.out.println( "Configuration Error - Invalid link type: " + type );
@@ -160,6 +168,7 @@ public class PathConfiguration {
 	public List<PathLink> getSyncNodePathLinks(String startNode, String node) {
 		return getNodePathLinksByType(startNode, node, LINK_TYPE_SYNC);
 	}
+
 	public List<PathLink> getAsyncNodePathLinks(String startNode, String node) {
 		return getNodePathLinksByType(startNode, node, LINK_TYPE_ASYNC);
 	}
@@ -172,13 +181,26 @@ public class PathConfiguration {
 		}
 		return neighbours;
 	}
+
 	public List<String> getAsyncNeighbours(String startNode, String node) {
 		List<String> neighbours = new ArrayList<String>();
 		List<PathLink> links = getAsyncNodePathLinks(startNode, node);
-		for(PathLink link : links) {
+		for (PathLink link : links) {
 			neighbours.add(link.getTarget());
 		}
 		return neighbours;
+	}
+
+	public List<PathLink> getQuorumPathLinks(String startNode, String node) {
+		return getNodePathLinksByType(startNode, node, LINK_TYPE_QUORUM);
+	}
+
+	public int getQuorumSize(String startNode) {
+		//TODO: getQuorumSize
+//		config.get()
+//		int target = linkElement.getAttribute("qsize");
+//		return qsize;
+		return 1;
 	}
 
 	private List<PathLink> getNodePathLinksByType(String startNode, String node, String type) {

@@ -50,9 +50,10 @@ public class PendingRequest {
 	 * The necessary responses list is a list with host names from all
 	 * nodes which we require a response from.
 	 */
-	public void addNodeToNecessaryResponses(InetSocketAddress a) {
+	private void addNodeToNecessaryResponses(InetSocketAddress a) {
 		this.necessaryResponses.add(a);
 	}
+
 	/**
 	 * Adds all nodes in the given list to the necessary responses list.
 	 * The necessary responses list is a list with host names from all
@@ -81,6 +82,7 @@ public class PendingRequest {
 	public void setResponseNode(InetSocketAddress node) {
 		this.responseNode = node;
 	}
+
 	/**
 	 * returns the node which should receive the response of the request
 	 * @return the node which should receive the response of the request
@@ -96,6 +98,7 @@ public class PendingRequest {
 	public boolean responsesPending() {
 		return !necessaryResponses.isEmpty();
 	}
+
 	public String getStartNode() {
 		return startNode;
 	}
@@ -131,6 +134,7 @@ public class PendingRequest {
 	public boolean isFinished() {
 		return finished;
 	}
+
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
@@ -143,5 +147,7 @@ public class PendingRequest {
 		this.response = response;
 	}
 	
-
+	protected int getNumberOfNecessaryResponses() {
+		return necessaryResponses.size();
+	}
 }
