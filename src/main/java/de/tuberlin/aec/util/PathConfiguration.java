@@ -32,6 +32,7 @@ public class PathConfiguration {
 	public static final String LINK_TYPE_ASYNC = "async";
 
 	private String configFile;
+	private Map<String, Integer> qSizes;
 	
 	Map<String, Map<String, List<PathLink>>> config;
 
@@ -43,6 +44,7 @@ public class PathConfiguration {
 	public PathConfiguration(String configFile) {
 		this.configFile = configFile;
 		config = new HashMap<String, Map<String, List<PathLink>>>();
+		qSizes = new HashMap<>();
 		parse();
 	}
 	
@@ -134,6 +136,7 @@ public class PathConfiguration {
 		} else if(type.equals(PathConfiguration.LINK_TYPE_QUORUM)) {
 			// TODO - done
 			NodeList qParticipants = linkElement.getChildNodes();
+			qSizes.put(linkElement.getAttribute("src"), new Integer(linkElement.getAttribute("qsize")));
 
 			for (int k = 0; k < qParticipants.getLength(); k++) {
 				Node qParticipant = qParticipants.item(k);
@@ -196,11 +199,7 @@ public class PathConfiguration {
 	}
 
 	public int getQuorumSize(String startNode) {
-		//TODO: getQuorumSize
-//		config.get()
-//		int target = linkElement.getAttribute("qsize");
-//		return qsize;
-		return 4;
+		return qSizes.get(startNode);
 	}
 
 	private List<PathLink> getNodePathLinksByType(String startNode, String node, String type) {
