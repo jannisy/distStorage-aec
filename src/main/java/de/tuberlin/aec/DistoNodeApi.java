@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import de.tub.ise.hermes.Sender;
 import de.tuberlin.aec.communication.MessageSender;
 import de.tuberlin.aec.communication.PutResponse;
 import de.tuberlin.aec.storage.LocalStorage;
@@ -53,72 +52,67 @@ public class DistoNodeApi {
 			List<String> syncNeighbours = pathConfig.getSyncNeighbours(startNode, startNode);
 			List<PathLink> syncPaths = pathConfig.getSyncNodePathLinks(startNode, startNode);
 			List<PathLink> asyncPaths = pathConfig.getAsyncNodePathLinks(startNode, startNode);
-			final PendingRequest pendingRequest;
-			if(!syncPaths.isEmpty()) {
-				boolean expectResponse = false; // This is the starting node - no response required.
-				if(localStorage.getPendingRequest(key) != null) {
-					System.out.println("Internal Error: There is a pending request on this key.");
-				}
-				pendingRequest = new PendingRequest(startNode, key, value, expectResponse);
-				pendingRequest.addNodesToNecessaryResponses(syncNeighbours);
+			List<PathLink> quorum = pathConfig.getQuorumPathLinks(startNode, startNode);
+
+			PendingRequest pendingRequest = null;
+
+			if (!quorum.isEmpty()) {
+				// start a quorum
+				pendingRequest = new PendingQuorum(startNode, key, value, false, pathConfig.getQuorumSize(startNode));
+				pendingRequest.addNodesToNecessaryResponses(allNeighbours);
 				localStorage.setPendingRequest(key, pendingRequest);
 				localStorage.lock(key);
 			} else {
-				pendingRequest = null;
-				// no neighbours or only async
-				// -> commit immediately
-				localStorage.put(key, value);
-			}
-			for(PathLink syncPath : syncPaths) {
-				InetSocketAddress address = NetworkConfiguration.createAddressFromString(syncPath.getTarget());
-				boolean expectResponse = true;
-				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
-			}
-			for(PathLink asyncPath : asyncPaths) {
-				InetSocketAddress address = NetworkConfiguration.createAddressFromString(asyncPath.getTarget());
-				boolean expectResponse = false;
-				msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
+				if (!syncPaths.isEmpty()) {
+					boolean expectResponse = false; // This is the starting node - no response required.
+					if (localStorage.getPendingRequest(key) != null) {
+						System.out.println("Internal Error: There is a pending request on this key.");
+					}
+					pendingRequest = new PendingRequest(startNode, key, value, expectResponse);
+					pendingRequest.addNodesToNecessaryResponses(syncNeighbours);
+					localStorage.setPendingRequest(key, pendingRequest);
+					localStorage.lock(key);
+				} else { // no neighbours or only async -> commit immediately
+					localStorage.put(key, value);
+				}
 			}
 
-			if(!syncPaths.isEmpty()) {
-				assert(pendingRequest != null);
-				if(!pendingRequest.isFinished()) {
-					synchronized(pendingRequest) {
+			sendWriteSuggestions(syncPaths, key, value, startNode, true);
+			sendWriteSuggestions(asyncPaths, key, value, startNode, false);
+			sendWriteSuggestions(quorum, key, value, startNode, true);
 
-					    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-				
-					    exec.schedule(new Runnable() {
-					              public void run() {
+			if (!syncPaths.isEmpty() || !syncPaths.isEmpty()) { //TODO involve quorum
+				assert (pendingRequest != null);
+				if (!pendingRequest.isFinished()) {
+					synchronized (pendingRequest) {
 
-					            	  if(!pendingRequest.isFinished()) {
-						            	  System.out.println("Timeout for Put Request key=" + key);
-						            	  localStorage.unlock(key);
-						            	  localStorage.removePendingRequest(key);
+						ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+						exec.schedule(new TimeOutChecker(pendingRequest, key), REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
-						            	  synchronized(pendingRequest) {
-						            		  pendingRequest.setFinished(true);
-						            		  PutResponse response = new PutResponse(false);
-						            		  response.setErrorMessage("Timeout!");
-						            		  pendingRequest.setResponse(response);
-						            		  System.out.println("Notify (timeout)");
-						            		  pendingRequest.notifyAll();
-						            	  }
-					            	  }
-					              }
-					         }, REQUEST_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-					    
-					    try {
-					    	pendingRequest.wait();
-					    	System.out.println("PendingRequest: notified");
-					    } catch (InterruptedException e) {
-					        // Happens if someone interrupts the thread.
-					    }
+						waitForResponses(pendingRequest);
 					}
 				}
 				return pendingRequest.getResponse();
 			} else {
 				return new PutResponse(true);
 			}
+
+		}
+	}
+
+	private void waitForResponses(PendingRequest pendingRequest) {
+		try {
+			pendingRequest.wait();
+			System.out.println("PendingRequest: notified");
+		} catch (InterruptedException e) {
+			e.printStackTrace(); // Happens if someone interrupts the thread.
+		}
+	}
+
+	private void sendWriteSuggestions(List<PathLink> paths, String key, String value, String startNode, boolean expectResponse) {
+		for (PathLink path : paths) {
+			InetSocketAddress address = NetworkConfiguration.createAddressFromString(path.getTarget());
+			msgSender.sendWriteSuggestion(address.getHostName(), address.getPort(), key, value, startNode, expectResponse);
 		}
 	}
 
@@ -145,5 +139,33 @@ public class DistoNodeApi {
 			msgSender.sendDeleteRequest(node.getHostName(), node.getPort(), key);
 		}
 	}
-	
+
+	private class TimeOutChecker implements Runnable {
+
+		private PendingRequest pendingRequest;
+		private String key;
+
+		public TimeOutChecker(PendingRequest pendingRequest, String key) {
+			this.pendingRequest = pendingRequest;
+			this.key = key;
+		}
+
+		public void run() {
+
+			if (!pendingRequest.isFinished()) {
+				System.out.println("Timeout for Put Request key=" + key);
+				localStorage.unlock(key);
+				localStorage.removePendingRequest(key);
+
+				synchronized (pendingRequest) {
+					pendingRequest.setFinished(true);
+					PutResponse response = new PutResponse(false);
+					response.setErrorMessage("Timeout!");
+					pendingRequest.setResponse(response);
+					System.out.println("Notify (timeout)");
+					pendingRequest.notifyAll();
+				}
+			}
+		}
+	}
 }

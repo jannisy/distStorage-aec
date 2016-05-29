@@ -34,10 +34,8 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 		System.out.println("Received SyncWriteSuggestionResponse Message.");
 		WriteSuggestionResponseMessage msg = WriteSuggestionResponseMessage.createFromRequest(request);
 		String key = msg.getKey();
-		// TODO: handle the case where this node is not the start node -> send response back 
 		PendingRequest pendingRequest = localStorage.getPendingRequest(key);
 		if (pendingRequest == null) {
-			// TODO internal error
 			System.out.println("Internal Error: Could not find pending request.");
 		} else {
 			if(pendingRequest.getStartNode().equals(nodeConfig.getHostAndPort())) {
@@ -59,13 +57,14 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 			InetSocketAddress address = NetworkConfiguration.createAddressFromString(request.getOriginator());
 			pendingRequest.removeNodeFromNecessaryResponses(address);
 			
-			if(!pendingRequest.responsesPending()) {
+			if(!pendingRequest.responsesPending() && !pendingRequest.isFinished()) {
+				pendingRequest.setFinished(true);
 				if(pendingRequest.getExpectResponse()) {
 					boolean responseAck = true;
 					msgSender.sendSyncWriteSuggestionResponse(pendingRequest.getResponseNode().getHostName(), 
 							pendingRequest.getResponseNode().getPort(), key, responseAck);
 				}
-				pendingRequest.setFinished(true);
+
 			} else {
 				System.out.println("  Awaiting further response messages.");
 			}
@@ -89,7 +88,8 @@ public class WriteSuggestionResponseHandler implements IRequestHandler {
 			InetSocketAddress address = NetworkConfiguration.createAddressFromString(request.getOriginator());
 			pendingRequest.removeNodeFromNecessaryResponses(address);
 			
-			if(!pendingRequest.responsesPending()) {
+			if(!pendingRequest.responsesPending() && !pendingRequest.isFinished()) {
+				pendingRequest.setFinished(true);
 				handleRequestCommit(key, pendingRequest);
 			} else {
 				System.out.println("  Awaiting further response messages.");

@@ -80,7 +80,7 @@ public class DistoNode {
 	public void start() {
 		startWebserver();
 		startHermes();
-		
+
 	}
 	
 	private void startWebserver() {
