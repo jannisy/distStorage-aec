@@ -14,6 +14,11 @@ import de.tuberlin.aec.message.WriteSuggestionResponseMessage;
  */
 public class MessageSender {
 	
+	/**
+	 * the delay in milliseconds before a message is sent
+	 */
+	private static int MSG_DELAY = 0;
+	
 	private String sender;
 
 	public MessageSender(String sender) {
@@ -21,16 +26,20 @@ public class MessageSender {
 	}
     private void sendMessage(String host, int port, Request request) {
 	    
-	    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-
-	    exec.schedule(new Runnable() {
-	              public void run() {
-	                  Sender sender = new Sender(host, port);
-	                  sender.sendMessage(request, 2000);
-	                  //System.out.println("Message sent to " + host + ":" + port);
-	              }
-	         }, 500, TimeUnit.MILLISECONDS);
-	    
+    	if (MSG_DELAY > 0) {
+		    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+	
+		    exec.schedule(new Runnable() {
+		              public void run() {
+		                  Sender sender = new Sender(host, port);
+		                  sender.sendMessage(request, 2000);
+		              }
+		         }, MSG_DELAY, TimeUnit.MILLISECONDS);
+    	} else {
+            Sender sender = new Sender(host, port);
+            sender.sendMessage(request, 2000);
+    		
+    	}
 	    
     }
 
