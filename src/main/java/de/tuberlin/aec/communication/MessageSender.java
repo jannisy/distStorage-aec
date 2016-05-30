@@ -11,6 +11,9 @@ import de.tuberlin.aec.message.WriteSuggestionMessage;
 import de.tuberlin.aec.message.WriteSuggestionResponseMessage;
 
 /**
+ * The message sender provides an interface
+ * for sending Disto messages.
+ * 
  * Created by joh-mue on 24/05/16.
  */
 public class MessageSender {

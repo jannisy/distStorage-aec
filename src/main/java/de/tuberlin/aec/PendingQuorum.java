@@ -4,6 +4,9 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 /**
+ * A PendingQuroum is a Pending Request which does not wait for
+ * all, but <qsize> responses.
+ * 
  * Created by joh-mue on 29/05/16.
  */
 public class PendingQuorum extends PendingRequest {

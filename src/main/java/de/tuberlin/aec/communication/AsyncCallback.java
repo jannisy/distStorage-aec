@@ -7,8 +7,6 @@ public class AsyncCallback implements AsyncCallbackRecipient {
 
 	@Override
 	public void callback(Response arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

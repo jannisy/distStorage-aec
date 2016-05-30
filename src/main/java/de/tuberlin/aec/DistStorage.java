@@ -22,7 +22,6 @@ public class DistStorage {
         
         System.out.println("Disto. pathsConfig=" + pathsConfig + ", serverlist=" + serverlist + ",host=" + host + ", port=" + hermesPort + ", restPort=" + restPort);
         
-        // TODO 
     	NodeConfiguration nodeConfig = new NodeConfiguration(host, hermesPort, restPort);
     	PathConfiguration pathConfig = new PathConfiguration(pathsConfig);
     	NetworkConfiguration  netConfig = new NetworkConfiguration(serverlist);

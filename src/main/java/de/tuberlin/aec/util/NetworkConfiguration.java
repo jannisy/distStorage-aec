@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * The network configuration contains the details on the network,
+ * e.g. available servers or standard ports.
+ *
+ */
 public class NetworkConfiguration {
-	
 	
 	/**
 	 * the standard port of a node

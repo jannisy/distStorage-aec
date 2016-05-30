@@ -9,6 +9,9 @@ import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
 
+/**
+ * This class handles an incoming delete request. 
+ */
 public class DeleteRequestHandler implements IRequestHandler {
 
 	private LocalStorage localStorage;

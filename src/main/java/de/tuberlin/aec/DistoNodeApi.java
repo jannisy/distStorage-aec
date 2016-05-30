@@ -20,6 +20,7 @@ import de.tuberlin.aec.util.PathLink;
  */
 public class DistoNodeApi {
 
+	/* the dependencies */
 	private LocalStorage localStorage;
 	private MessageSender msgSender;
 	private NodeConfiguration nodeConfig;
@@ -37,6 +38,12 @@ public class DistoNodeApi {
 		this.networkConfig = networkConfig;
 	}
 
+	/**
+	 * performs a put request with the given key and value
+	 * @param key the key
+	 * @param value the value
+	 * @return the response
+	 */
 	public PutResponse put(String key, String value) {
 		System.out.println("# API PUT REQUEST: [" + key + ", " + value + "]");
 
@@ -116,6 +123,13 @@ public class DistoNodeApi {
 		}
 	}
 
+
+	/**
+	 * performs a get request with the given key and returns
+	 * the value
+	 * @param key the key
+	 * @return the value
+	 */
 	public String get(String key) {
 		String value = localStorage.get(key);
 		if(value == null) {
@@ -124,10 +138,20 @@ public class DistoNodeApi {
 			return value;
 		}
 	}
+	/**
+	 * returns the time stamp for the given key
+	 * the value
+	 * @param key the key
+	 * @return the time stamp
+	 */
 	public long getTimestamp(String key) {
 		return localStorage.getTimestamp(key);
 	}
 	
+	/**
+	 * deletes the value with the given key
+	 * @param key the key
+	 */
 	public void delete(String key) {
 		localStorage.unlock(key);
 		localStorage.delete(key);

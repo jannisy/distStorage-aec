@@ -2,7 +2,6 @@ package de.tuberlin.aec.communication;
 
 /**
  * This class represents the response for a put request.
-
  */
 public class PutResponse {
 

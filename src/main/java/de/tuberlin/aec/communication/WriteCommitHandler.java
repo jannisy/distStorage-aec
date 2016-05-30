@@ -8,6 +8,9 @@ import de.tuberlin.aec.storage.LocalStorage;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
 
+/**
+ * This class handles an incoming WriteCommitMessage
+ */
 public class WriteCommitHandler implements IRequestHandler {
 
 	private LocalStorage localStorage;

@@ -12,6 +12,9 @@ import de.tuberlin.aec.util.NetworkConfiguration;
 import de.tuberlin.aec.util.NodeConfiguration;
 import de.tuberlin.aec.util.PathConfiguration;
 
+/**
+ * This class handles an incoming WriteSuggestionResponse message
+ */
 public class WriteSuggestionResponseHandler implements IRequestHandler {
 
 	private LocalStorage localStorage;
