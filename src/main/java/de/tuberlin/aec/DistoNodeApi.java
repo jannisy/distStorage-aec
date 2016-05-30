@@ -88,7 +88,7 @@ public class DistoNodeApi {
 			sendWriteSuggestions(asyncPaths, key, value, startNode, false);
 			sendWriteSuggestions(quorum, key, value, startNode, true);
 
-			if (!syncPaths.isEmpty() || !syncPaths.isEmpty()) { //TODO involve quorum
+			if (!syncPaths.isEmpty() || !quorum.isEmpty()) { 
 				assert (pendingRequest != null);
 				if (!pendingRequest.isFinished()) {
 					synchronized (pendingRequest) {

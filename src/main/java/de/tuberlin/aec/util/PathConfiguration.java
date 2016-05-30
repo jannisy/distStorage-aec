@@ -134,7 +134,7 @@ public class PathConfiguration {
 			list.add(pathLink);
 
 		} else if(type.equals(PathConfiguration.LINK_TYPE_QUORUM)) {
-			// TODO - done
+			// done
 			NodeList qParticipants = linkElement.getChildNodes();
 			qSizes.put(linkElement.getAttribute("src"), new Integer(linkElement.getAttribute("qsize")));
 
@@ -147,7 +147,7 @@ public class PathConfiguration {
 				}
 			}
 		} else {
-			// TODO config file error
+			// config file error
 	        System.out.println( "Configuration Error - Invalid link type: " + type );
 		}
 	}

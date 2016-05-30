@@ -88,7 +88,6 @@ public class DistoNode {
 		try {
 			RestServer restServer = new RestServer(this.nodeConfig.getRestPort(), this.api);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
